@@ -1,6 +1,7 @@
 #Sinatra bussiness layer
 
 ##Usage
+Of course you need to have ruby installed (google for rvm).
 Go into /busslayer catalog and write in terminal
 
 ```
