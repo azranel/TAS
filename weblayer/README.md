@@ -1,13 +1,20 @@
-#Sinatra bussiness layer
+#Django web layer
 
 ##Usage
-Go into /busslayer catalog and write in terminal
-
+Go into /weblayer catalog and write in terminal
 ```
-rake db:create
-rake db:migrate
-ruby app.rb
+./manage.py runserver
 ```
 
 ##Possible problems
-- Database login atm is my local PC account name. Temporary fix for this is going to config/database.yml and changing username to your account username.
+- ImportError: No module named django.core.management:
+  No django module on computer. You need to install django framework first.
+
+  Solution:
+    If you have pip, write in console:
+    ```
+    pip install django
+    ```
+    If you don't check this website for information how to install it:
+    http://pip.readthedocs.org/en/latest/installing.html
+
