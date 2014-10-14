@@ -1,18 +1,17 @@
 require 'sinatra/base'
-
-#Dir.glob('./{models,routes}/*.rb').each { |file| require file }
+require "sinatra/activerecord"
 
 require_relative "routes/test"
 
 class SimpleApp < Sinatra::Base
  
   set :root, File.dirname(__FILE__)
- 
+  set :database_file, "./db/database.yml"
+
   enable :sessions
  
-  #helpers Sinatra::SampleApp::Helpers
- 
+  register Sinatra::ActiveRecordExtension
   register Sinatra::SampleApp::Routing::Test
-  #register Sinatra::SampleApp::Routing::Secrets
+
   run! if app_file == $0
 end

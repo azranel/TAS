@@ -1,5 +1,13 @@
-# define our source to loook for gems
+# define our source to look for gems
 source "http://rubygems.org/"
 
 # declare the sinatra dependency
 gem "sinatra"
+
+# database gems
+gem "activerecord"
+gem "sinatra-activerecord"
+gem "pg"
+
+#rake for tasks
+gem "rake"
