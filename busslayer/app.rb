@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require "sinatra/activerecord"
+require "./models/user"
 
 require_relative "routes/test"
 

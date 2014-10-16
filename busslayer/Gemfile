@@ -11,3 +11,6 @@ gem "pg"
 
 #rake for tasks
 gem "rake"
+
+#others
+gem 'annotate', '~> 2.6.5'
