@@ -14,3 +14,4 @@ gem "rake"
 
 #others
 gem 'annotate', '~> 2.6.5'
+gem 'bcrypt'
