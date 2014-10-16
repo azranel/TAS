@@ -1,13 +1,25 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from app.forms import SignInForm, SignUpForm
+import httplib2
 
 
 def index(request):
     if request.method == 'POST':
         form = SignInForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect('/thanks/')
+            form_dict = {
+                'login': form.cleaned_data['login'],
+                'password': form.cleaned_data['password'],
+            }
+            body = str(form_dict)
+            h = httplib2.Http()
+            resp, content = h.request("http://0.0.0.0:4567/",
+                                      method="POST",
+                                      body=body)
+            # return render('/', {
+            #     'content': content,
+            # })
     else:
         form = SignInForm()
 

@@ -7,7 +7,7 @@
             <div class="account-wall">
                 <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                     alt="">
-                <form class="form-signin" action="/signin/" method="post">{% csrf_token %}
+                <form class="form-signin" method="post">{% csrf_token %}
                     {{ form }}
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Zaloguj" />
                     <a href="signup" class="pull-right new-account">Nie masz jeszcze konta? </a><span class="clearfix"></span>
