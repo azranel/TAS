@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
+    'zsw.app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,9 +49,9 @@ MIDDLEWARE_CLASSES = (
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
-ROOT_URLCONF = 'zsw.urls'
+ROOT_URLCONF = 'zsw.zsw.urls'
 
-WSGI_APPLICATION = 'zsw.wsgi.application'
+WSGI_APPLICATION = 'zsw.zsw.wsgi.application'
 
 
 # Database
