@@ -1,20 +1,25 @@
 #Django web layer
 
+###Configuration
+Go into /weblayer catalog and write in terminal
+```
+python bootstrap.py
+bin/buildout
+
+bin/manage syncdb
+```
+You will be asked for create superuser. Answer "no" for it:
+```
+Would you like to create one now? (yes/no): no
+```
+
 ##Usage
 Go into /weblayer catalog and write in terminal
 ```
-./manage.py runserver
+bin/manage runserver
 ```
 
-##Possible problems
-- ImportError: No module named django.core.management:
-  No django module on computer. You need to install django framework first.
 
-  Solution:
-    If you have pip, write in console:
-    ```
-    pip install django
-    ```
-    If you don't check this website for information how to install it:
-    http://pip.readthedocs.org/en/latest/installing.html
+##Possible problems
+Please report if you found any.
 
