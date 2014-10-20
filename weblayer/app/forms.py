@@ -8,30 +8,30 @@ class SignInForm(Form):
                                                'required': '',
                                                'autofocus': ''}))
     password = CharField(label='', widget=PasswordInput(attrs={
-        'placeholder': 'Haslo',
+        'placeholder': 'Password',
         'class': 'form-control',
         'required': ''}))
 
 
 class SignUpForm(Form):
-    imie = CharField(label='',
-                     widget=TextInput(attrs={'placeholder': 'Imie',
+    name = CharField(label='',
+                     widget=TextInput(attrs={'placeholder': 'Name',
                                              'class': 'form-control',
                                              'required': '',
                                              'autofocus': ''}))
-    nazwisko = CharField(label='',
-                     widget=TextInput(attrs={'placeholder': 'Nazwisko',
-                                             'class': 'form-control',
-                                             'required': ''}))
-    adres = CharField(label='',
-                     widget=TextInput(attrs={'placeholder': 'Adres',
-                                             'class': 'form-control',
-                                             'required': ''}))
+    surname = CharField(label='',
+                        widget=TextInput(attrs={'placeholder': 'Surname',
+                                                'class': 'form-control',
+                                                'required': ''}))
+    phone = CharField(label='',
+                      widget=TextInput(attrs={'placeholder': 'Phone',
+                                              'class': 'form-control',
+                                              'required': ''}))
     email = EmailField(label='',
                        widget=TextInput(attrs={'placeholder': 'Email',
                                                'class': 'form-control',
                                                'required': ''}))
     password = CharField(label='', widget=PasswordInput(attrs={
-        'placeholder': 'Haslo',
+        'placeholder': 'Password',
         'class': 'form-control',
         'required': ''}))

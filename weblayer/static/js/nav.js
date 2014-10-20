@@ -4,5 +4,5 @@ $(document).ready(function(){
     // $(this).addClass('active');
   // });
     $(".nav").find('li').removeClass('active');
-    $('#navi-' + window.location.pathname.slice(1)).addClass('active');
+    $('.navi-' + window.location.pathname.slice(1)).addClass('active');
 });

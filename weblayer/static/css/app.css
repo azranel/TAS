@@ -77,3 +77,8 @@ body {
     display: block;
     margin-top: 10px;
 }
+.red_alert
+{
+    color: red;
+    background-color: lightgrey;
+}

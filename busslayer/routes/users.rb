@@ -24,7 +24,7 @@ module Sinatra
                 { status: 403 }.to_json
               end
             else
-              { status: 404 }.to_json 
+              { status: 404 }.to_json
             end
           end
 
