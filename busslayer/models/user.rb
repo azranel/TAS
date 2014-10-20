@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   validates :lastname, presence: true
   validates :password_digest, presence: true
   validates :phone, presence: true
-  validates :email, confirmation: true
+  validates :email, confirmation: true, uniqueness: true
 
   has_secure_password
 end
