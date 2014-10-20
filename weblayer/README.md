@@ -8,7 +8,7 @@ bin/buildout
 
 bin/manage syncdb
 ```
-You will be asked for create superuser. Answer "no" for it:
+You will be asked to create a superuser. Answer 'no' for it:
 ```
 Would you like to create one now? (yes/no): no
 ```
