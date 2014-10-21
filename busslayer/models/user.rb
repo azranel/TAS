@@ -22,5 +22,7 @@ class User < ActiveRecord::Base
   validates :phone, presence: true
   validates :email, confirmation: true, uniqueness: true
 
+  has_many :apartments, :through => :users_apartments
+  has_many :users_apartments
   has_secure_password
 end

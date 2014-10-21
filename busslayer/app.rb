@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require "sinatra/activerecord"
-require "./models/user"
+Dir["./models/*.rb"].each {|file| require file }
 require "i18n"
 require "json"
 
