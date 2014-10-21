@@ -1,8 +1,10 @@
 require 'sinatra/base'
 require "sinatra/activerecord"
-Dir["./models/*.rb"].each {|file| require file }
 require "i18n"
 require "json"
+
+#Used for loading models into the application
+Dir["./models/*.rb"].each {|file| require file }
 
 I18n.config.enforce_available_locales = false
 
