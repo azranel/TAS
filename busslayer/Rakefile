@@ -6,3 +6,11 @@ namespace :db do
     require "./app"
   end
 end
+
+require 'rspec/core/rake_task'
+ 
+RSpec::Core::RakeTask.new :specs do |task|
+  task.pattern = Dir['spec/**/*.rb']
+end
+ 
+task :default => ['specs']

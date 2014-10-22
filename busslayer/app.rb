@@ -4,12 +4,15 @@ require "i18n"
 require "json"
 
 #Used for loading models into the application
-Dir["./models/*.rb"].each {|file| require file }
+Dir["./models/*.rb"].each { |file| require file }
 
 I18n.config.enforce_available_locales = false
 
-require_relative "routes/users"
-require_relative "routes/misc"
+#Used for loading routes
+Dir["./routes/*.rb"].each { |file| require file }
+
+ENV['RACK_ENV'] ||= 'development'
+
 
 class SimpleApp < Sinatra::Base
  
@@ -21,8 +24,8 @@ class SimpleApp < Sinatra::Base
   enable :sessions
  
   register Sinatra::ActiveRecordExtension
-  register Sinatra::SampleApp::Routing::Users
-  register Sinatra::SampleApp::Routing::Misc
+  register Sinatra::Routing::Users
+  register Sinatra::Routing::Misc
 
   run! if app_file == $0
 end
