@@ -34,5 +34,13 @@ User.all
 
 will return all users from database.
 
+###Tests
+
+Business layer uses RSpec library for unit tests. To run test got into busslayer catalog and write:
+
+```
+bundle exec rake
+```
+
 ##Possible problems
 - Database login atm is my local PC account name. Temporary fix for this is going to config/database.yml and changing username to your account username.
