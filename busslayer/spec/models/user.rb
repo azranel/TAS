@@ -1,11 +1,11 @@
 require File.expand_path '../helpers/spec_helper.rb', __FILE__
 
 describe "User" do
-  describe "validations" do
-    before :all do 
+  before :all do 
       @u = User.new(firstname:"Jan", lastname: "Kowalski", email: "janko@wp.pl", password: "alamakota123", phone: "123456789")
-    end
+  end
 
+  describe "validations" do
     it "firstname" do
       @u.firstname = nil
       expect(@u).not_to be_valid
@@ -34,4 +34,15 @@ describe "User" do
       expect(User.count).to eq(count)
     end
   end
+
+  # Test below doesn't pass, dunno why
+  #
+  # describe "associations" do
+  #   it "can have many apartments" do
+  #     @u.apartments << Apartment.new(name: "Stare mieszkanie", city: "Poznań")
+  #     @u.apartments << Apartment.new(name: "Nowe mieszkanie", city: "Warszawa")
+  #     @u.save
+  #     expect(@u.apartments.count).to eq(2)
+  #   end
+  # end
 end
