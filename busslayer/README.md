@@ -1,5 +1,7 @@
 #Sinatra bussiness layer
 
+[![Build Status](https://travis-ci.org/azranel/TAS.svg?branch=master)](https://travis-ci.org/azranel/TAS)
+
 ##Usage
 
 ###Configuration
