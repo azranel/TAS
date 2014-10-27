@@ -29,9 +29,7 @@ describe "User" do
 
     it "email uniqueness" do
       u2 = User.new(firstname: "Jan", lastname: "Nowak", email: "janko@wp.pl", password: "alamakota123", phone:"123445434")
-      count = User.count
-      u2.save
-      expect(User.count).to eq(count)
+      expect(u2).not_to be_valid
     end
   end
 
