@@ -3,7 +3,7 @@ module Sinatra
     module Apartments
       def self.registered(app)
 
-        app.get  '/apartments/:id/json' do
+        app.get  '/apartments/:id' do
           content_type :json
           a = Apartment.find_by_id(params[:id])
           if a

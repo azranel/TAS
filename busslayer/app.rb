@@ -25,6 +25,7 @@ class SimpleApp < Sinatra::Base
  
   register Sinatra::ActiveRecordExtension
   register Sinatra::Routing::Users
+  register Sinatra::Routing::Apartments
   register Sinatra::Routing::Misc
 
   run! if app_file == $0

@@ -3,7 +3,7 @@ module Sinatra
     module Users
       def self.registered(app)
 
-        app.get  '/users/:id/json' do
+        app.get  '/users/:id' do
           content_type :json
           u = User.find_by_id(params[:id])
           if u
