@@ -3,6 +3,7 @@ require File.expand_path '../helpers/spec_helper.rb', __FILE__
 describe "User" do
   before :all do 
       @u = User.new(firstname:"Jan", lastname: "Kowalski", email: "janko@wp.pl", password: "alamakota123", phone: "123456789")
+      @u.save
   end
 
   describe "validations" do
@@ -27,7 +28,6 @@ describe "User" do
     end
 
     it "email uniqueness" do
-      @u.save
       u2 = User.new(firstname: "Jan", lastname: "Nowak", email: "janko@wp.pl", password: "alamakota123", phone:"123445434")
       count = User.count
       u2.save
