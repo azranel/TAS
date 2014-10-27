@@ -34,6 +34,12 @@ User.all
 
 will return all users from database.
 
+```ruby
+Apartment.all
+```
+
+will return all apartments from database.
+
 ###Tests
 
 Business layer uses RSpec library for unit tests. To run test got into busslayer catalog and write:
