@@ -7,7 +7,7 @@ module Sinatra
           content_type :json
           u = User.find_by_id(params[:id])
           if u
-            { status: 200, id: u.id, firstname: u.firstname, lastname: u.lastname, email: u.email, phone: u.phone }.to_json
+            u.fetch_hash.to_json
           else
             { status: 404 }.to_json
           end
@@ -18,11 +18,12 @@ module Sinatra
           u = User.find_by_email(params[:email])
           if u
             if u.authenticate(params[:password])
-              { status: 200, id: u.id }.to_json
+              u.fetch_hash(200, [:id]).to_json
             else
-              { status: 403 }.to_json
+              u.fetch_hash(403, []).to_json
             end
           else
+            # :fetch_hash cannot be used because of user if not found
             { status: 404 }.to_json
           end
         end
@@ -31,9 +32,9 @@ module Sinatra
           content_type :json
           u = User.new(params[:user])
           if u.save
-            { status: 200, id: u.id }.to_json
+            u.fetch_hash(200, [:id]).to_json
           else
-            { status: 403}.to_json
+            u.fetch_hash(403, []).to_json
           end
         end
       end

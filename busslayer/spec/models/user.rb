@@ -33,6 +33,22 @@ describe "User" do
     end
   end
 
+  describe "fetches" do
+    context "status 200" do
+      it "hash should have user information" do
+        h = @u.fetch_hash(200)
+        expect(h.keys).to eq([:status, :id, :firstname, :lastname, :email, :phone])
+      end      
+    end
+
+    context "status other than 200" do
+      it "hash should have only status code and user id" do
+        h = @u.fetch_hash(200, [:id])
+        expect(h.keys).to eq([:status, :id])
+      end
+    end
+  end
+
   # Test below doesn't pass, dunno why
   #
   # describe "associations" do
