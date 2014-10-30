@@ -50,5 +50,22 @@ Business layer uses RSpec library for unit tests. To run test got into busslayer
 bundle exec rake
 ```
 
-##Possible problems
-- Database login atm is my local PC account name. Temporary fix for this is going to config/database.yml and changing username to your account username.
+##Distributed Ruby (dRb)
+
+To use dRb go into terminal, run ruby interpreter and then:
+
+```ruby
+require 'drb'
+DRb.start_service
+obj = DRbObject.new(nil, 'druby://localhost:9000')
+```
+
+Now we have object from which we can invoke methods from RMIServer class (busslayer/rmiserv.rb file)
+
+For example:
+
+```ruby
+obj.fetch_all_users
+```
+
+Will return JSON with data of users.
