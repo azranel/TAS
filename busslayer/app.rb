@@ -16,10 +16,10 @@ Dir["./routes/*.rb"].each { |file| require file }
 require "./rmiserv"
 ENV['RACK_ENV'] ||= 'development'
 RMI_URL = 'druby://0.0.0.0:9000'
-
+$SITE = 1
 
 class SimpleApp < Sinatra::Base
- 
+  
   set :root, File.dirname(__FILE__)
   set :database_file, "./db/database.yml"
 
@@ -32,7 +32,6 @@ class SimpleApp < Sinatra::Base
 
   thr = Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
   
-  #DRb.thread.join
   puts "RMIServer running at #{RMI_URL}"
 
   run! if app_file == $0
