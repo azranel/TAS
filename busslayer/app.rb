@@ -18,8 +18,10 @@ ENV['RACK_ENV'] ||= 'development'
 RMI_URL = 'druby://0.0.0.0:9000'
 $SITE = 1
 
+
+
 class SimpleApp < Sinatra::Base
-  
+
   set :root, File.dirname(__FILE__)
   set :database_file, "./db/database.yml"
 
