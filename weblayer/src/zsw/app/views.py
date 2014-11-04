@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django.contrib.sessions.backends.db import SessionStore
-from zsw.app.forms import SignInForm, SignUpForm
+from zsw.app.forms import SignInForm, SignUpForm, ApartmentForm
 import httplib2
 import json
 
@@ -16,6 +16,36 @@ def check_session(request):
                 'login': s['login']}
     else:
         return {}
+
+
+def create_apartment(request):
+    status = check_session(request)
+    if request.method == 'POST':
+        form = ApartmentForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'name': form.cleaned_data['name'],
+                'address': form.cleaned_data['address'],
+                'city': form.cleaned_data['city'],
+                'owner': form.cleaned_data['owner'],
+                'description': form.cleaned_data["description"],
+                'residents': form.cleaned_data['residents']
+            }
+
+
+            response = render(request, 'app/apartment.html', {
+                              'form': form,
+                              'login_data': status,
+                              })
+
+
+    else:
+        form = ApartmentForm()
+        response = render(request, 'app/apartment.html', {
+                          'form': form,
+                          'login_data': status,
+                          })
+    return response
 
 
 def login(request):
@@ -143,6 +173,15 @@ def contact(request):
                   })
 
 
+def apartment(request):
+    # status = check_session(request)
+    response = create_apartment(request)
+    return response
+    # return render(request, 'app/apartment.html', {
+    #                 'login_data': status,
+    #             })
+
+
 def signup(request):
     response = register(request)
     return response
@@ -159,3 +198,6 @@ def signout(request):
                                   })
     response.set_cookie(key='key', expires=0)
     return response
+
+
+
