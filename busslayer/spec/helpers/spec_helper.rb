@@ -1,5 +1,7 @@
 require 'rack/test'
 require 'database_cleaner'
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 require_relative File.join('../..', 'app')
 

@@ -18,3 +18,4 @@ gem 'bcrypt'
 gem 'rspec'
 gem 'rack-test'
 gem 'database_cleaner'
+gem "codeclimate-test-reporter"

@@ -59,6 +59,9 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# PyCharm
+.idea/
+
 # Busslayer
 # Sinatra stuff
 .DS_STORE
