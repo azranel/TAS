@@ -16,5 +16,6 @@ manage = zsw.manage:main
 ''',
     install_requires=[
         'Django',
+	'httplib2',
     ]
 )

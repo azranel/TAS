@@ -35,3 +35,27 @@ class SignUpForm(Form):
         'placeholder': 'Password',
         'class': 'form-control',
         'required': ''}))
+
+
+class ApartmentForm(Form):
+    name = CharField(label='',
+                        widget=TextInput(attrs={'placeholder': 'Name',
+                                                'class': 'form-control',
+                                                'required': ''}))
+    address = CharField(label='',
+                        widget=TextInput(attrs={'placeholder': 'Address',
+                                                'class': 'form-control',
+                                                'required': ''}))
+    city = CharField(label='',
+                        widget=TextInput(attrs={'placeholder': 'City',
+                                                'class': 'form-control',
+                                                'required': ''}))
+    owner = CharField(label='',
+                        widget=TextInput(attrs={'placeholder': 'Owner',
+                                                'class': 'form-control',
+                                                'required': ''}))
+    description = CharField(label='',
+                        widget=TextInput(attrs={'placeholder': 'Description',
+                                                'class': 'form-control',
+                                                'required': ''}))
+
