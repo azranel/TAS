@@ -2,6 +2,11 @@ module Sinatra
   module Routing
     module Apartments
       def self.registered(app)
+        fetch(app)
+        create(app)
+        update(app)
+      end
+      def self.fetch(app)
         app.get  '/apartments/:id' do
           content_type :json
           a = Apartment.find_by_id(params[:id])
@@ -11,7 +16,8 @@ module Sinatra
             { status: 404 }.to_json
           end
         end
-
+      end
+      def self.create(app)
         app.post '/apartments/create' do
           content_type :json
           a = Apartment.new(params[:apartment])
@@ -21,7 +27,8 @@ module Sinatra
             { status: 403 }.to_json
           end
         end
-
+      end
+      def self.update(app)
         app.post '/apartments/update' do
           content_type :json
           a = Apartment.find_by_id(params[:id])
@@ -35,7 +42,6 @@ module Sinatra
             { status: 404 }.to_json
           end
         end
-
       end
     end
   end
