@@ -20,22 +20,22 @@ module Sinatra
           else
             { status: 403 }.to_json
           end
-
-          app.post '/apartments/update' do
-            content_type :json
-            a = Apartment.find_by_id(params[:id])
-            if a
-              if a.update(params[:apartment])
-                { status: 200, updated_at: a.updated_at }.to_json
-              else
-                { status: 403 }.to_json
-              end
-            else
-              { status: 404 }.to_json
-            end
-          end
-
         end
+
+        app.post '/apartments/update' do
+          content_type :json
+          a = Apartment.find_by_id(params[:id])
+          if a
+            if a.update(params[:apartment])
+              { status: 200, updated_at: a.updated_at }.to_json
+            else
+              { status: 403 }.to_json
+            end
+          else
+            { status: 404 }.to_json
+          end
+        end
+
       end
     end
   end

@@ -14,5 +14,9 @@ class RMIServer
   def add_apartment(params)
     Apartment.create(params)
   end
+
+  def fetch_all_apartments
+    Apartment.all.as_json
+  end
 end
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'sinatra/base'
 require "sinatra/activerecord"
 require "i18n"
@@ -18,26 +20,23 @@ ENV['RACK_ENV'] ||= 'development'
 RMI_URL = 'druby://0.0.0.0:9000'
 $SITE = 1
 
-
-
 class SimpleApp < Sinatra::Base
 
   set :root, File.dirname(__FILE__)
   set :database_file, "./db/database.yml"
 
-  enable :sessions
- 
+  # enable :sessions
+
   register Sinatra::ActiveRecordExtension
   register Sinatra::Routing::Users
   register Sinatra::Routing::Apartments
   register Sinatra::Routing::Misc
 
-  thr = Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
-  
-  puts "RMIServer running at #{RMI_URL}"
+  if ENV['RACK_ENV'] == 'development'
+    thr = Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
+  end
+
+  puts "RMIServer running at #{ RMI_URL }"
 
   run! if app_file == $0
-
-  # replace localhost with 0.0.0.0 to allow conns from outside
-  
 end
