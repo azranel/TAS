@@ -15,6 +15,7 @@
 class Apartment < ActiveRecord::Base
   has_many :users, :through => :users_apartments
   has_many :users_apartments
+  belongs_to :user
 
   validates :name, presence: true
   validates :city, presence: true
