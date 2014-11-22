@@ -5,6 +5,7 @@ module Sinatra
         fetch(app)
         create(app)
         update(app)
+        bills(app)
       end
       def self.fetch(app)
         app.get  '/apartments/:id' do
@@ -41,6 +42,12 @@ module Sinatra
           else
             { status: 404 }.to_json
           end
+        end
+      end
+      def self.bills(app)
+        app.get '/apartments/:id/bills' do
+          bills = Apartment.find_by_id(params[:id]).bills
+          bills.to_json
         end
       end
     end
