@@ -25,18 +25,19 @@ class SimpleApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :database_file, "./db/database.yml"
 
-  # enable :sessions
+  enable :sessions
 
   register Sinatra::ActiveRecordExtension
+  register Sinatra::Routing::Bills
   register Sinatra::Routing::Users
   register Sinatra::Routing::Apartments
   register Sinatra::Routing::Misc
+  
 
   if ENV['RACK_ENV'] == 'development'
-    thr = Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
+    Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
+    puts "RMIServer running at #{ RMI_URL }"
   end
-
-  puts "RMIServer running at #{ RMI_URL }"
 
   run! if app_file == $0
 end

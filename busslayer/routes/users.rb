@@ -6,7 +6,7 @@ module Sinatra
         login(app)
         fetch(app)
       end
-
+      
       def self.register(app)
         app.post "/users/register" do
           content_type :json

@@ -26,4 +26,13 @@ class Bill < ActiveRecord::Base
     divided = value / persons_number
     divided.round(2)
   end
+
+  def fetch_hash(status_value=200, values=[])
+    hash = Hash.new
+    hash[:status] = status_value
+    values.each do |value|
+      hash[value] = self[value]
+    end
+    hash
+  end
 end

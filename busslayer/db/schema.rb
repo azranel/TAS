@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20141120163141) do
 
   create_table "bills", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.float    "value"
     t.integer  "apartment_id"
     t.integer  "user_id"

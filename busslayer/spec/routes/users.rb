@@ -10,7 +10,7 @@ describe "Users routes" do
   describe "GET /users/:id" do
     context "if not found" do
       it "returns 404 if user is not found" do
-        response = get 'users/99999'
+        response = get 'users/-1'
         expect(response.body).to include({ status: 404 }.to_json)
       end
     end
