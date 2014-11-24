@@ -22,6 +22,17 @@ If you want to have some data in database at start then:
 rake db:seed
 ```
 
+###Running
+```
+ruby app.rb
+```
+
+or just
+
+```
+./app.rb
+```
+
 ###Console
 
 Go into /busslayer catalog and write in terminal
