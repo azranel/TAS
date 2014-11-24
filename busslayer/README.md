@@ -16,6 +16,18 @@ rake db:create
 rake db:migrate
 ```
 
+###Running
+
+```
+ruby app.rb
+```
+
+or just
+
+```
+./app.rb
+```
+
 ###Console
 
 Go into /busslayer catalog and write in terminal
