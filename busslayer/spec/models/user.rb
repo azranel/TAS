@@ -37,7 +37,7 @@ describe "User" do
     context "status 200" do
       it "hash should have user information" do
         h = @u.fetch_hash(200)
-        expect(h.keys).to eq([:status, :id, :firstname, :lastname, :email, :phone])
+        expect(h.keys).to eq([:status, :id, :firstname, :lastname, :email, :phone, :apartments])
       end      
     end
 
