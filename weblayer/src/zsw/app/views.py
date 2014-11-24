@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render, render_to_response
 from django.contrib.sessions.backends.db import SessionStore
 from zsw.app.forms import SignInForm, SignUpForm, ApartmentForm
@@ -5,7 +7,7 @@ import httplib2
 import json
 
 
-SERVER = "http://0.0.0.0:4567/users/"
+SERVER = "http://0.0.0.0:4567/"
 
 
 def check_session(request):
@@ -27,10 +29,23 @@ def create_apartment(request):
                 'name': form.cleaned_data['name'],
                 'address': form.cleaned_data['address'],
                 'city': form.cleaned_data['city'],
-                'owner': form.cleaned_data['owner'],
-                'description': form.cleaned_data["description"],
-                'residents': form.cleaned_data['residents']
+                'owner_id': status['id'],
+                'description': form.cleaned_data['description']
             }
+
+            body = "apartment[name]=" + form_dict['name'] + \
+                   "&apartment[address]=" + form_dict['address'] + \
+                   "&apartment[city]=" + form_dict['city'] + \
+                   "&apartment[user_id]=" + str(form_dict['owner_id']) + \
+                   "&apartment[description]=" + form_dict['description']
+
+            h = httplib2.Http()
+            resp, content = h.request(SERVER + "apartments/create",
+                                      method="POST",
+                                      body=body)
+            content = json.loads(content)
+            print content
+
 
 
             response = render(request, 'app/apartment.html', {
@@ -61,7 +76,7 @@ def login(request):
                    form_dict['password']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "login",
+            resp, content = h.request(SERVER + "users/login",
                                       method="POST",
                                       body=body)
             content = json.loads(content)
@@ -117,7 +132,7 @@ def register(request):
                 "&user[phone]=" + form_dict['phone']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "register",
+            resp, content = h.request(SERVER + "users/register",
                                       method="POST",
                                       body=body)
             content = json.loads(content)
