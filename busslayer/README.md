@@ -16,6 +16,12 @@ rake db:create
 rake db:migrate
 ```
 
+If you want to have some data in database at start then:
+
+```
+rake db:seed
+```
+
 ###Console
 
 Go into /busslayer catalog and write in terminal
