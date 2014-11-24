@@ -10,9 +10,11 @@ module Sinatra
           content_type :json
           bill = Bill.find_by_id(params[:id])
           if bill
-            bill.fetch_hash(200, 
+            h = bill.fetch_hash(200, 
               [:name, :description,:value,
-              :apartment_id, :user_id]).to_json
+              :apartment_id, :user_id])
+            h['divided'] = bill.divide(bill.apartment.users.count)
+            h.to_json
           else
             { status: 404 }.to_json
           end
