@@ -20,4 +20,8 @@ class Apartment < ActiveRecord::Base
 
   validates :name, presence: true
   validates :city, presence: true
+
+  def have_user?(user)
+    self.user == user || self.users.include?(user)
+  end
 end

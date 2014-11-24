@@ -39,7 +39,9 @@ module Sinatra
           content_type :json
           u = User.find_by_id(params[:id])
           if u
-            u.fetch_hash.to_json
+            hash = u.fetch_hash
+            hash['owned'] = Apartment.where(user_id: u.id)
+            hash.to_json
           else
             { status: 404 }.to_json
           end

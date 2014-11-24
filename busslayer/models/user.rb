@@ -26,13 +26,13 @@ class User < ActiveRecord::Base
   has_many :users_apartments
   has_secure_password
 
-  def fetch_hash(status_value=200, values=[:id, :firstname, :lastname, :email, :phone])
+  def fetch_hash(status_value=200, values=[:id, :firstname, :lastname, :email, :phone, :apartments])
     h = Hash.new
 
     # Could be done some refactoring here
     h[:status] = status_value
     values.each do |single|
-      h[single] = self[single]
+      h[single] = self.send(single)
     end
     h
   end
