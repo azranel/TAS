@@ -72,24 +72,24 @@ class AddResidentToApartmentForm(forms.Form):
     email = forms.EmailField(label='',
                              widget=forms.TextInput(
                                  attrs={'placeholder': 'Email',
-                                        'class': 'form-control',
+                                        'class': 'form-control form-group',
                                         'required': ''}))
 
 class AddBillToApartmentForm(forms.Form):
     name = forms.CharField(label='',
                             widget=forms.TextInput(attrs={
                                         'placeholder': 'Name',
-                                        'class': 'form-control',
+                                        'class': 'form-control form-group',
                                         'required': ''}))
     description = forms.CharField(label='',
                             widget=forms.TextInput(attrs={
                                         'placeholder': 'Description',
-                                        'class': 'form-control',
+                                        'class': 'form-control form-group',
                                         'required': ''}))
     value = forms.DecimalField(label='', 
                               max_digits=19, 
                               decimal_places=2,
                               widget=forms.TextInput(attrs={
                                         'placeholder': 'Value',
-                                        'class': 'form-control',
+                                        'class': 'form-control form-group',
                                         'required': ''}))
