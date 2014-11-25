@@ -2,6 +2,9 @@
 {% block content %}
         {% if login_data.id %}
             <h2>Szczegóły mieszkania</h2>
+            {% if apartment.owner.id == login_data.id %}
+                <a href="/apartments/edit/{{ apartment.id }}">Edytuj</a>
+            {% endif %}
 
             {% if apartment %}
                 <table border="1px">
@@ -10,11 +13,7 @@
                         <td>{{ apartment.id }}</td>
                     </tr>
                     <tr>
-                        <td>Właściciel:</td>
-                        <td>{{ apartment.owner.firstname }}</td>
-                    </tr>
-                    <tr>
-                        <td>Imię:</td>
+                        <td>Nazwa:</td>
                         <td>{{ apartment.name }}</td>
                     </tr>
                     <tr>
@@ -22,10 +21,14 @@
                         <td>{{ apartment.address }}, {{ apartment.city }}</td>
                     </tr>
                     <tr>
+                        <td>Właściciel:</td>
+                        <td>{{ apartment.owner.firstname }}</td>
+                    </tr>
+                    <tr>
                         <td>Mieszkańcy ({{ apartment.residents_count }}):</td>
                         <td>
                             {% for resident in apartment.residents %}
-                                {{ resident.firstname }},
+                                <a href="/user/{{ resident.id }}">{{ resident.firstname }}</a>,
                             {% endfor %}
                         </td>
                     </tr>
