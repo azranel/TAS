@@ -31,7 +31,7 @@ module Sinatra
         end
       end
       def self.update(app)
-        app.post '/apartments/update' do
+        app.post '/apartments/:id/update' do
           content_type :json
           a = Apartment.find_by_id(params[:id])
           if a
