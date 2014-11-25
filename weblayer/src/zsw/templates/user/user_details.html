@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+        {% if login_data.id %}
+            <h3>Szczegóły użytkownika <b>{{ user_info.firstname }}</b></h3>
+            <table border="1px">
+                <tr>
+                    <td>ID:</td>
+                    <td>{{ user_info.id }}</td>
+                </tr>
+                <tr>
+                    <td>Imię:</td>
+                    <td>{{ user_info.firstname }}</td>
+                </tr>
+                <tr>
+                    <td>Nazwisko:</td>
+                    <td>{{ user_info.lastname }}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ user_info.email }}</td>
+                </tr>
+                <tr>
+                    <td>Telefon:</td>
+                    <td>{{ user_info.phone }}</td>
+                </tr>
+            </table>
+        {% else %}
+            <div>Proszę się przelogować</div>
+        {% endif %}
+{% endblock %}

@@ -25,7 +25,7 @@
                         <td>Mieszkańcy:</td>
                         <td>
                             {% for resident in apartment.residents %}
-                                {{ resident.firstname }},
+                                <a href="/user/{{ resident.id }}">{{ resident.firstname }}</a>,
                             {% endfor %}
                         </td>
                     </tr>

@@ -79,9 +79,9 @@ def login(request):
     return response
 
 
-def fetch(request, status):
+def fetch(user_id):
     h = httplib2.Http()
-    resp, content = h.request(SERVER + "users/" + str(status.get('id')),
+    resp, content = h.request(SERVER + "users/" + str(user_id),
                               method="GET")
     content = json.loads(content)
 
@@ -146,6 +146,17 @@ def register(request):
     return response
 
 
+def user_details(request, user_id):
+    status = check_session(request)
+
+    user_info = fetch(user_id)
+    response = render(request, 'user/user_details.html', {
+                      'login_data': status,
+                      'user_info': user_info,
+                      })
+    return response
+
+
 def signup(request):
     response = register(request)
     return response
@@ -175,13 +186,13 @@ def fetch_apartment(request, apartment_id):
 
 
 def get_list_of_owned_apartments(request, status):
-    user_info = fetch(request, status)
+    user_info = fetch(status['id'])
 
     return user_info.get('owned')
 
 
 def get_list_of_ressident_apartments(request, status):
-    user_info = fetch(request, status)
+    user_info = fetch(status['id'])
 
     return user_info.get('apartments')
 
