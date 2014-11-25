@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, HttpResponseRedirect
 from django.contrib.sessions.backends.db import SessionStore
-from zsw.app.forms import SignInForm, SignUpForm, ApartmentForm
+import zsw.app.forms as forms
 import httplib2
 import json
 
@@ -20,53 +20,11 @@ def check_session(request):
         return {}
 
 
-def create_apartment(request):
-    status = check_session(request)
-    if request.method == 'POST':
-        form = ApartmentForm(request.POST)
-        if form.is_valid():
-            form_dict = {
-                'name': form.cleaned_data['name'],
-                'address': form.cleaned_data['address'],
-                'city': form.cleaned_data['city'],
-                'owner_id': status['id'],
-                'description': form.cleaned_data['description']
-            }
-
-            body = "apartment[name]=" + form_dict['name'] + \
-                   "&apartment[address]=" + form_dict['address'] + \
-                   "&apartment[city]=" + form_dict['city'] + \
-                   "&apartment[user_id]=" + str(form_dict['owner_id']) + \
-                   "&apartment[description]=" + form_dict['description']
-
-            h = httplib2.Http()
-            resp, content = h.request(SERVER + "apartments/create",
-                                      method="POST",
-                                      body=body)
-            content = json.loads(content)
-            print content
-
-
-
-            response = render(request, 'app/apartment.html', {
-                              'form': form,
-                              'login_data': status,
-                              })
-
-
-    else:
-        form = ApartmentForm()
-        response = render(request, 'app/apartment.html', {
-                          'form': form,
-                          'login_data': status,
-                          })
-    return response
-
-
+### USER
 def login(request):
     status = check_session(request)
     if request.method == 'POST':
-        form = SignInForm(request.POST)
+        form = forms.SignInForm(request.POST)
         if form.is_valid():
             form_dict = {
                 'login': form.cleaned_data['login'],
@@ -93,30 +51,46 @@ def login(request):
                     'login': form_dict['login'],
                 }
 
-                response = render(request, 'app/signin.html', {
+                response = render(request, 'user/signin.html', {
                                   'login_data': login_data,
                                   })
 
                 response.set_cookie(key='key', value=key)
             else:
-                form = SignInForm()
-                response = render(request, 'app/signin.html', {
+                form = forms.SignInForm()
+                response = render(request, 'user/signin.html', {
                                   'form': form,
                                   'login_data': status,
                                   'no_access': True
                                   })
+        else:
+            form = forms.SignInForm()
+            response = render(request, 'user/signin.html', {
+                              'form': form,
+                              'login_data': status,
+                              'error': form.errors,
+                              })
     else:
-        form = SignInForm()
-        response = render(request, 'app/signin.html', {
+        form = forms.SignInForm()
+        response = render(request, 'user/signin.html', {
                           'form': form,
                           'login_data': status,
                           })
     return response
 
 
+def fetch(request, status):
+    h = httplib2.Http()
+    resp, content = h.request(SERVER + "users/" + str(status.get('id')),
+                              method="GET")
+    content = json.loads(content)
+
+    return content
+
+
 def register(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = forms.SignUpForm(request.POST)
         if form.is_valid():
             form_dict = {
                 'login': form.cleaned_data['email'],
@@ -149,52 +123,27 @@ def register(request):
                     'login': form_dict['login'],
                 }
 
-                response = render(request, 'app/signup.html', {
+                response = render(request, 'user/signup.html', {
                                   'login_data': login_data,
                                   })
 
                 response.set_cookie(key='key', value=key)
             else:
-                response = render(request, 'app/signup.html', {
+                response = render(request, 'user/signup.html', {
                     'content': content,
                     'email_in_use': True,
                 })
+        else:
+            form = forms.SignUpForm()
+            response = render(request, 'user/signup.html', {
+                              'form': form,
+                              })
     else:
-        form = SignUpForm()
-        response = render(request, 'app/signup.html', {
+        form = forms.SignUpForm()
+        response = render(request, 'user/signup.html', {
                           'form': form,
                           })
     return response
-
-
-def index(request):
-    status = check_session(request)
-    return render(request, 'app/index.html', {
-                  'login_data': status,
-                  })
-
-
-def about(request):
-    status = check_session(request)
-    return render(request, 'app/about.html', {
-                  'login_data': status,
-                  })
-
-
-def contact(request):
-    status = check_session(request)
-    return render(request, 'app/contact.html', {
-                  'login_data': status,
-                  })
-
-
-def apartment(request):
-    # status = check_session(request)
-    response = create_apartment(request)
-    return response
-    # return render(request, 'app/apartment.html', {
-    #                 'login_data': status,
-    #             })
 
 
 def signup(request):
@@ -215,4 +164,144 @@ def signout(request):
     return response
 
 
+### APARTMENTS
+def fetch_apartment(request, apartment_id):
+    h = httplib2.Http()
+    resp, content = h.request(SERVER + "apartments/" + str(apartment_id),
+                              method="GET")
+    content = json.loads(content)
 
+    return content
+
+
+def get_list_of_owned_apartments(request, status):
+    user_info = fetch(request, status)
+
+    return user_info.get('owned')
+
+
+def get_list_of_ressident_apartments(request, status):
+    user_info = fetch(request, status)
+
+    return user_info.get('apartments')
+
+
+def apartments(request):
+    status = check_session(request)
+    list_of_owned_apartments = get_list_of_owned_apartments(request, status)
+    list_of_resident_apartments = get_list_of_ressident_apartments(request,
+                                                                   status
+                                                                   )
+    return render(request, 'apartments/apartments.html', {
+                  'login_data': status,
+                  'list_of_owned_apartments': list_of_owned_apartments,
+                  'list_of_resident_apartments': list_of_resident_apartments,
+                  })
+
+
+def apartment_details(request, apartment_id):
+    status = check_session(request)
+
+    if request.method == 'POST':
+        form = forms.AddResidentToApartmentForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'email': form.cleaned_data['email'],
+            }
+            body = "user_id=" + str(status['id']) + \
+                "&email=" + form_dict['email']
+
+            h = httplib2.Http()
+            resp, content = h.request(SERVER + "apartments/" +
+                                      apartment_id + "/addresident",
+                                      method="POST",
+                                      body=body)
+            content = json.loads(content)
+
+            apartment = fetch_apartment(request, apartment_id)
+            response = render(request, 'apartments/apartment_details.html', {
+                              'login_data': status,
+                              'apartment': apartment,
+                              'form': form,
+                              })
+        else:
+            apartment = fetch_apartment(request, apartment_id)
+            form = forms.AddResidentToApartmentForm()
+            response = render(request, 'apartments/apartment_details.html', {
+                              'login_data': status,
+                              'apartment': apartment,
+                              'form': form,
+                              })
+    else:
+        apartment = fetch_apartment(request, apartment_id)
+        form = forms.AddResidentToApartmentForm()
+        response = render(request, 'apartments/apartment_details.html', {
+                          'login_data': status,
+                          'apartment': apartment,
+                          'form': form,
+                          })
+    return response
+
+
+def create_apartment(request):
+    status = check_session(request)
+    if request.method == 'POST':
+        form = forms.ApartmentForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'name': form.cleaned_data['name'],
+                'address': form.cleaned_data['address'],
+                'city': form.cleaned_data['city'],
+                'owner_id': status['id'],
+                'description': form.cleaned_data['description']
+            }
+
+            body = "apartment[name]=" + form_dict['name'] + \
+                   "&apartment[address]=" + form_dict['address'] + \
+                   "&apartment[city]=" + form_dict['city'] + \
+                   "&apartment[user_id]=" + str(form_dict['owner_id']) + \
+                   "&apartment[description]=" + form_dict['description']
+
+            h = httplib2.Http()
+            resp, content = h.request(SERVER + "apartments/create",
+                                      method="POST",
+                                      body=body)
+            content = json.loads(content)
+
+            if content['status'] == 200:
+                response = HttpResponseRedirect('/apartments')
+            else:
+                response = render(request, 'apartments/create_apartment.html',
+                                  {
+                                      'login_data': status,
+                                      'content': content,
+                                  })
+    else:
+        form = forms.ApartmentForm()
+        response = render(request, 'apartments/create_apartment.html', {
+                          'form': form,
+                          'login_data': status,
+                          })
+    return response
+
+
+### APP
+def index(request):
+    status = check_session(request)
+    return render(request, 'app/index.html', {
+                  'login_data': status,
+                  })
+
+
+def about(request):
+    status = check_session(request)
+    return render(request, 'app/about.html', {
+                  'login_data': status,
+                  })
+
+
+def contact(request):
+    status = check_session(request)
+    return render(request, 'app/contact.html', {
+                  'login_data': status,
+                  })

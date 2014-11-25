@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block content %}
+        {% if login_data.id %}
+            <h2>Szczegóły mieszkania</h2>
+
+            {% if apartment %}
+                <table border="1px">
+                    <tr>
+                        <td>ID:</td>
+                        <td>{{ apartment.id }}</td>
+                    </tr>
+                    <tr>
+                        <td>Właściciel:</td>
+                        <td>{{ apartment.owner.firstname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Imię:</td>
+                        <td>{{ apartment.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Lokalizacja:</td>
+                        <td>{{ apartment.address }}, {{ apartment.city }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mieszkańcy:</td>
+                        <td>
+                            {% for resident in apartment.residents %}
+                                {{ resident.firstname }},
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Opis:</td>
+                        <td>{{ apartment.description }}</td>
+                    </tr>
+                </table>
+                {% if apartment.owner.id == login_data.id %}
+                    <br />
+                    Dodaj użytkownika:
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                    </form>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <div>Proszę się przelogować</div>
+        {% endif %}
+{% endblock %}

@@ -1,8 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2> Zarządzanie mieszkaniem </h2>
         {% if login_data.id %}
-
+            <h2>Dodaj nowe mieszkanie</h2>
             <div>
             <form class="form-signin" method="post">
                 <p><h1>Dodaj mieszkanie</h1>
@@ -12,10 +11,8 @@
                 </p>
             </form>
             </div>
-
         {% else %}
-            <div> Sign in to edit  </div>
-
+            <div>Zaloguj sie aby dodac nowe mieszkanie</div>
         {% endif %}
 
 {% endblock %}

@@ -12,5 +12,9 @@ urlpatterns = patterns('',
     url(r'^signup', views.signup, name='signup'),
     url(r'^signin', views.signin, name='signin'),
     url(r'^signout', views.signout, name='signout'),
-    url(r'^apartment', views.apartment, name='apartment')
+    url(r'^apartments/$', views.apartments, name='apartments'),
+    url(r'^apartments/create', views.create_apartment,
+        name='create_apartment'),
+    url(r'^apartments/(?P<apartment_id>[0-9]*)', views.apartment_details,
+        name='apartment_details'),
 )

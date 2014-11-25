@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+        {% if login_data.id %}
+            <h2>Zarządzanie mieszkaniem</h2>
+            <a href="create">Dodaj mieszkanie</a><br />
+
+            {% if list_of_owned_apartments %}
+                Lista własnych mieszkań:
+                <ul>
+                    {% for apartment in list_of_owned_apartments %}
+                    <li><a href="{{ apartment.id }}">{{apartment.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if list_of_resident_apartments %}
+                Lista zamieszkałych mieszkań:
+                <ul>
+                    {% for apartment in list_of_resident_apartments %}
+                    <li><a href="{{ apartment.id }}">{{apartment.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        {% else %}
+            <div>Proszę się przelogować</div>
+        {% endif %}
+{% endblock %}

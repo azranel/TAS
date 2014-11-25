@@ -25,13 +25,13 @@
             <div class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
                 <li class="navi-"><a href="/">Home</a></li>
-                <li class="navi-about"><a href="about">About</a></li>
-                <li class="navi-contact"><a href="contact">Contact</a></li>
-                <li class="navi-apartment"><a href="apartment">Zarzadzanie mieszkaniem</a></li>
+                <li class="navi-about"><a href="{% url "about" %}">About</a></li>
+                <li class="navi-contact"><a href="{% url "contact" %}">Contact</a></li>
                 {% if login_data.id %}
-                    <li class="navi-signout"><a href="signout">Sign Out</a></li>
+                    <li class="navi-apartments"><a href="{% url "apartments" %}">Zarzadzanie mieszkaniem</a></li>
+                    <li class="navi-signout"><a href="{% url "signout" %}">Sign Out</a></li>
                 {% else %}
-                    <li class="navi-signin navi-signup"><a href="signin">Sign In/Up</a></li>
+                    <li class="navi-signin navi-signup"><a href="{% url "signin" %}">Sign In/Up</a></li>
                 {% endif %}
               </ul>
             </div>

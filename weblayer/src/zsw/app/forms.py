@@ -1,57 +1,76 @@
-from django.forms import CharField, EmailField, Form, PasswordInput, TextInput
+import django.forms as forms
 
 
-class SignInForm(Form):
-    login = EmailField(label='',
-                       widget=TextInput(attrs={'placeholder': 'Email',
-                                               'class': 'form-control',
-                                               'required': '',
-                                               'autofocus': ''}))
-    password = CharField(label='', widget=PasswordInput(attrs={
-        'placeholder': 'Password',
-        'class': 'form-control',
-        'required': ''}))
-
-
-class SignUpForm(Form):
-    name = CharField(label='',
-                     widget=TextInput(attrs={'placeholder': 'Name',
-                                             'class': 'form-control',
-                                             'required': '',
-                                             'autofocus': ''}))
-    surname = CharField(label='',
-                        widget=TextInput(attrs={'placeholder': 'Surname',
-                                                'class': 'form-control',
-                                                'required': ''}))
-    phone = CharField(label='',
-                      widget=TextInput(attrs={'placeholder': 'Phone',
+class SignInForm(forms.Form):
+    login = forms.EmailField(label='',
+                                   widget=forms.TextInput(
+                                       attrs={'placeholder': 'Email',
                                               'class': 'form-control',
-                                              'required': ''}))
-    email = EmailField(label='',
-                       widget=TextInput(attrs={'placeholder': 'Email',
+                                              'required': '',
+                                              'autofocus': ''}))
+    password = forms.CharField(label='',
+                                     widget=forms.PasswordInput(attrs={
+                                         'placeholder': 'Password',
+                                         'class': 'form-control',
+                                         'required': ''}))
+
+
+class SignUpForm(forms.Form):
+    name = forms.CharField(label='',
+                                 widget=forms.TextInput(
+                                     attrs={'placeholder': 'Name',
+                                            'class': 'form-control',
+                                            'required': '',
+                                            'autofocus': ''}))
+    surname = forms.CharField(label='',
+                                    widget=forms.TextInput(
+                                        attrs={'placeholder': 'Surname',
                                                'class': 'form-control',
                                                'required': ''}))
-    password = CharField(label='', widget=PasswordInput(attrs={
-        'placeholder': 'Password',
-        'class': 'form-control',
-        'required': ''}))
+    phone = forms.CharField(label='',
+                                  widget=forms.TextInput(
+                                      attrs={'placeholder': 'Phone',
+                                             'class': 'form-control',
+                                             'required': ''}))
+    email = forms.EmailField(label='',
+                                   widget=forms.TextInput(
+                                       attrs={'placeholder': 'Email',
+                                              'class': 'form-control',
+                                              'required': ''}))
+    password = forms.CharField(label='',
+                                     widget=forms.PasswordInput(
+                                         attrs={
+                                             'placeholder': 'Password',
+                                             'class': 'form-control',
+                                             'required': ''}))
 
 
-class ApartmentForm(Form):
-    name = CharField(label='',
-                        widget=TextInput(attrs={'placeholder': 'Name',
-                                                'class': 'form-control',
-                                                'required': ''}))
-    address = CharField(label='',
-                        widget=TextInput(attrs={'placeholder': 'Address',
-                                                'class': 'form-control',
-                                                'required': ''}))
-    city = CharField(label='',
-                        widget=TextInput(attrs={'placeholder': 'City',
-                                                'class': 'form-control',
-                                                'required': ''}))
-    description = CharField(label='',
-                        widget=TextInput(attrs={'placeholder': 'Description',
-                                                'class': 'form-control',
-                                                'required': ''}))
+class ApartmentForm(forms.Form):
+    name = forms.CharField(label='',
+                                 widget=forms.TextInput(
+                                     attrs={'placeholder': 'Name',
+                                            'class': 'form-control',
+                                            'required': ''}))
+    address = forms.CharField(label='',
+                                    widget=forms.TextInput(
+                                        attrs={'placeholder': 'Address',
+                                               'class': 'form-control',
+                                               'required': ''}))
+    city = forms.CharField(label='',
+                                 widget=forms.TextInput(
+                                     attrs={'placeholder': 'City',
+                                            'class': 'form-control',
+                                            'required': ''}))
+    description = forms.CharField(label='',
+                                        widget=forms.TextInput(attrs={
+                                            'placeholder': 'Description',
+                                            'class': 'form-control',
+                                            'required': ''}))
 
+
+class AddResidentToApartmentForm(forms.Form):
+    email = forms.EmailField(label='',
+                             widget=forms.TextInput(
+                                 attrs={'placeholder': 'Email',
+                                        'class': 'form-control',
+                                        'required': ''}))
