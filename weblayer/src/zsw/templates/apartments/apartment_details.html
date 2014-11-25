@@ -4,6 +4,7 @@
             <h2>Szczegóły mieszkania</h2>
             {% if apartment.owner.id == login_data.id %}
                 <a href="/apartments/edit/{{ apartment.id }}">Edytuj</a>
+                <a href="/apartments/{{ apartment.id }}/delete">Usuń</a>
             {% endif %}
 
             {% if apartment %}

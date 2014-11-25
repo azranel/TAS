@@ -3,6 +3,7 @@ module Sinatra
     module Apartments
       def self.registered(app)
         fetch(app)
+        delete(app)
         create(app)
         update(app)
         bills(app)
@@ -14,6 +15,17 @@ module Sinatra
           a = Apartment.find_by_id(params[:id])
           if a
             { status: 200, id: a.id, name: a.name, address: a.address, city: a.city, description: a.description, owner: a.user, residents: a.users }.to_json
+          else
+            { status: 404 }.to_json
+          end
+        end
+      end
+      def self.delete(app)
+        app.get  '/apartments/:id/delete' do
+          content_type :json
+          a = Apartment.find_by_id(params[:id])
+          if a.delete
+            { status: 200 }.to_json
           else
             { status: 404 }.to_json
           end

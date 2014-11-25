@@ -18,6 +18,8 @@ urlpatterns = patterns('',
         name='create_apartment'),
     url(r'^apartments/edit/(?P<apartment_id>[0-9]*)', views.edit_apartment,
         name='edit_apartment'),
+    url(r'^apartments/(?P<apartment_id>[0-9]*)/delete', views.delete_apartment,
+        name='delete_apartment'),
     url(r'^apartments/(?P<apartment_id>[0-9]*)', views.apartment_details,
         name='apartment_details'),
 )

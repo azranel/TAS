@@ -185,6 +185,23 @@ def fetch_apartment(apartment_id):
     return content
 
 
+def delete_apartment(request, apartment_id):
+    status = check_session(request)
+
+    h = httplib2.Http()
+    resp, content = h.request(SERVER + "apartments/" + str(apartment_id) +
+                              "/delete",
+                              method="GET")
+    content = json.loads(content)
+
+    if content['status'] == 200:
+        response = HttpResponseRedirect('/apartments')
+    else:
+        response = HttpResponseRedirect('/apartments/' + apartment_id)
+
+    return response
+
+
 def get_list_of_owned_apartments(request, status):
     user_info = fetch(status['id'])
 
