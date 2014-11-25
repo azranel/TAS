@@ -176,7 +176,7 @@ def signout(request):
 
 
 ### APARTMENTS
-def fetch_apartment(request, apartment_id):
+def fetch_apartment(apartment_id):
     h = httplib2.Http()
     resp, content = h.request(SERVER + "apartments/" + str(apartment_id),
                               method="GET")
@@ -199,10 +199,15 @@ def get_list_of_ressident_apartments(request, status):
 
 def apartments(request):
     status = check_session(request)
-    list_of_owned_apartments = get_list_of_owned_apartments(request, status)
-    list_of_resident_apartments = get_list_of_ressident_apartments(request,
-                                                                   status
-                                                                   )
+    if status != {}:
+        list_of_owned_apartments = get_list_of_owned_apartments(request,
+                                                                status)
+        list_of_resident_apartments = get_list_of_ressident_apartments(request,
+                                                                       status
+                                                                       )
+    else:
+        list_of_owned_apartments = []
+        list_of_resident_apartments = []
     return render(request, 'apartments/apartments.html', {
                   'login_data': status,
                   'list_of_owned_apartments': list_of_owned_apartments,
@@ -229,14 +234,14 @@ def apartment_details(request, apartment_id):
                                       body=body)
             content = json.loads(content)
 
-            apartment = fetch_apartment(request, apartment_id)
+            apartment = fetch_apartment(apartment_id)
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
                               'form': form,
                               })
         else:
-            apartment = fetch_apartment(request, apartment_id)
+            apartment = fetch_apartment(apartment_id)
             form = forms.AddResidentToApartmentForm()
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
@@ -244,12 +249,64 @@ def apartment_details(request, apartment_id):
                               'form': form,
                               })
     else:
-        apartment = fetch_apartment(request, apartment_id)
+        apartment = fetch_apartment(apartment_id)
         form = forms.AddResidentToApartmentForm()
         response = render(request, 'apartments/apartment_details.html', {
                           'login_data': status,
                           'apartment': apartment,
                           'form': form,
+                          })
+    return response
+
+
+def edit_apartment(request, apartment_id):
+    status = check_session(request)
+    if request.method == 'POST':
+        form = forms.ApartmentForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'name': form.cleaned_data['name'],
+                'address': form.cleaned_data['address'],
+                'city': form.cleaned_data['city'],
+                'description': form.cleaned_data['description']
+            }
+
+            body = "apartment[name]=" + form_dict['name'] + \
+                   "&apartment[address]=" + form_dict['address'] + \
+                   "&apartment[city]=" + form_dict['city'] + \
+                   "&apartment[description]=" + form_dict['description']
+
+            h = httplib2.Http()
+            resp, content = h.request(SERVER + "apartments/" + apartment_id +
+                                      "/update",
+                                      method="POST",
+                                      body=body)
+            content = json.loads(content)
+
+            if content['status'] == 200:
+                response = HttpResponseRedirect('/apartments/' +
+                                                str(apartment_id))
+            else:
+                apartment_info = fetch_apartment(apartment_id)
+                form = forms.ApartmentForm({
+                    'name': apartment_info['name'],
+                    'address': apartment_info['address'],
+                    'city': apartment_info['city'],
+                    'description': apartment_info.get('description')})
+                response = render(request, 'apartments/edit_apartment.html', {
+                                  'form': form,
+                                  'login_data': status,
+                                  })
+    else:
+        apartment_info = fetch_apartment(apartment_id)
+        form = forms.ApartmentForm({
+            'name': apartment_info['name'],
+            'address': apartment_info['address'],
+            'city': apartment_info['city'],
+            'description': apartment_info.get('description')})
+        response = render(request, 'apartments/edit_apartment.html', {
+                          'form': form,
+                          'login_data': status,
                           })
     return response
 
