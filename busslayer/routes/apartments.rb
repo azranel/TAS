@@ -14,7 +14,9 @@ module Sinatra
           content_type :json
           a = Apartment.find_by_id(params[:id])
           if a
-            { status: 200, id: a.id, name: a.name, address: a.address, city: a.city, description: a.description, owner: a.user, residents: a.users }.to_json
+            hash = { status: 200, id: a.id, name: a.name, address: a.address, city: a.city,
+             description: a.description, owner: a.user, residents: a.users, bills: a.bills,
+             residents_count: a.users.count }.to_json(methods: :divide)
           else
             { status: 404 }.to_json
           end

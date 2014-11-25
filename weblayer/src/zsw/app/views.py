@@ -236,10 +236,11 @@ def apartment_details(request, apartment_id):
     status = check_session(request)
 
     if request.method == 'POST':
-        form = forms.AddResidentToApartmentForm(request.POST)
-        if form.is_valid():
+        form_resident = forms.AddResidentToApartmentForm(request.POST)
+        form_bill = forms.AddBillToApartmentForm(request.POST)
+        if form_resident.is_valid():
             form_dict = {
-                'email': form.cleaned_data['email'],
+                'email': form_resident.cleaned_data['email'],
             }
             body = "user_id=" + str(status['id']) + \
                 "&email=" + form_dict['email']
@@ -255,23 +256,55 @@ def apartment_details(request, apartment_id):
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
-                              'form': form,
+                              'form_resident': form_resident,
+                              'form_bill': forms.AddBillToApartmentForm()
+                              })
+        elif form_bill.is_valid():
+            form_dict = {
+                'name': form_bill.cleaned_data['name'],
+                'description': form_bill.cleaned_data['description'],
+                'value': str(form_bill.cleaned_data['value']),
+            }
+
+            body = "bill[user_id]=" + str(status['id']) + \
+                "&bill[name]=" + form_dict['name'] + \
+                "&bill[description]=" + form_dict['description'] + \
+                "&bill[value]=" + form_dict['value'] + \
+                "&bill[apartment_id]=" + apartment_id
+
+            h = httplib2.Http()
+            resp, content = h.request(SERVER + "bills/create",
+                                      method="POST",
+                                      body=body)
+            content = json.loads(content)
+
+            apartment = fetch_apartment(request, apartment_id)
+            response = render(request, 'apartments/apartment_details.html', {
+                              'login_data': status,
+                              'apartment': apartment,
+                              'form_resident': forms.AddResidentToApartmentForm(),
+                              'form_bill': form_bill
                               })
         else:
+            form_resident = forms.AddResidentToApartmentForm()
+            form_bill = forms.AddBillToApartmentForm()
             apartment = fetch_apartment(apartment_id)
             form = forms.AddResidentToApartmentForm()
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
-                              'form': form,
+                              'form_resident': form_resident,
+                              'form_bill': form_bill
                               })
     else:
+        form_resident = forms.AddResidentToApartmentForm()
+        form_bill = forms.AddBillToApartmentForm()
         apartment = fetch_apartment(apartment_id)
-        form = forms.AddResidentToApartmentForm()
         response = render(request, 'apartments/apartment_details.html', {
                           'login_data': status,
                           'apartment': apartment,
-                          'form': form,
+                          'form_resident': form_resident,
+                          'form_bill': form_bill
                           })
     return response
 

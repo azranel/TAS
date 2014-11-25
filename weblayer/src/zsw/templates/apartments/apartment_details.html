@@ -26,7 +26,7 @@
                         <td>{{ apartment.owner.firstname }}</td>
                     </tr>
                     <tr>
-                        <td>Mieszkańcy:</td>
+                        <td>Mieszkańcy ({{ apartment.residents_count }}):</td>
                         <td>
                             {% for resident in apartment.residents %}
                                 <a href="/user/{{ resident.id }}">{{ resident.firstname }}</a>,
@@ -38,15 +38,52 @@
                         <td>{{ apartment.description }}</td>
                     </tr>
                 </table>
-                {% if apartment.owner.id == login_data.id %}
-                    <br />
-                    Dodaj użytkownika:
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form }}
-                        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
-                    </form>
-                {% endif %}
+                <br/>
+                <p>Rachunki: </p>
+                <table class="table table-hover">
+                    <tr>
+                        <td>Name</td>
+                        <td>Description</td>
+                        <td>Value</td>
+                        <td>Value/person</td>
+                    </tr>
+                    {% for bill in apartment.bills %}
+                        <tr>
+                            <td>{{ bill.name }}</td>
+                            <td>{{ bill.description }}</td>
+                            <td>{{ bill.value }}</td>
+                            <td>{{ bill.divide }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <br/>
+                <div class="row">
+                    <div class="col-md-5">
+                        {% if apartment.owner.id == login_data.id %}
+                            <br />
+                            <h4>Dodaj użytkownika:</h4>
+                            <form method="post" class="form-horizontal">
+                                {% csrf_token %}
+                                {{ form_resident }}
+                                <div class="form-group">
+                                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                                </div>
+                            </form>
+                            <br />
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-offset-2 col-md-5">
+                        <h4>Dodaj rachunek:</h4>
+                        <form method="post" class="form-horizontal">
+                            {% csrf_token %}
+                            {{ form_bill }}
+                            <div class="form-group">
+                            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
             {% endif %}
         {% else %}
             <div>Proszę się przelogować</div>

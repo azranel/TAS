@@ -28,6 +28,10 @@ class Bill < ActiveRecord::Base
     divided.round(2)
   end
 
+  def to_json()
+    super(methods: :divide)
+  end
+
   def fetch_hash(status_value=200, values=[])
     hash = Hash.new
     hash[:status] = status_value
