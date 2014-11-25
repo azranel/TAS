@@ -186,8 +186,6 @@ def fetch_apartment(apartment_id):
 
 
 def delete_apartment(request, apartment_id):
-    status = check_session(request)
-
     h = httplib2.Http()
     resp, content = h.request(SERVER + "apartments/" + str(apartment_id) +
                               "/delete",
@@ -278,7 +276,7 @@ def apartment_details(request, apartment_id):
                                       body=body)
             content = json.loads(content)
 
-            apartment = fetch_apartment(request, apartment_id)
+            apartment = fetch_apartment(apartment_id)
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
@@ -289,7 +287,6 @@ def apartment_details(request, apartment_id):
             form_resident = forms.AddResidentToApartmentForm()
             form_bill = forms.AddBillToApartmentForm()
             apartment = fetch_apartment(apartment_id)
-            form = forms.AddResidentToApartmentForm()
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
