@@ -222,23 +222,28 @@ def apartment_details(request, apartment_id):
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
-                              'form': form,
+                              'form_resident': form_resident,
+                              'form_bill': form_bill
                               })
         else:
             apartment = fetch_apartment(request, apartment_id)
-            form = forms.AddResidentToApartmentForm()
+            form_resident = forms.AddResidentToApartmentForm()
+            form_bill = forms.AddBillToApartmentForm()
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
-                              'form': form,
+                              'form_resident': form_resident,
+                              'form_bill': form_bill
                               })
     else:
         apartment = fetch_apartment(request, apartment_id)
-        form = forms.AddResidentToApartmentForm()
+        form_resident = forms.AddResidentToApartmentForm()
+        form_bill = forms.AddBillToApartmentForm()
         response = render(request, 'apartments/apartment_details.html', {
                           'login_data': status,
                           'apartment': apartment,
-                          'form': form,
+                          'form_resident': form_resident,
+                          'form_bill': form_bill
                           })
     return response
 

@@ -39,10 +39,17 @@
                     Dodaj użytkownika:
                     <form method="post">
                         {% csrf_token %}
-                        {{ form }}
+                        {{ form_resident }}
                         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
                     </form>
+                    <br />
                 {% endif %}
+                Dodaj rachunek:
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form_bill }}
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                </form>
             {% endif %}
         {% else %}
             <div>Proszę się przelogować</div>
