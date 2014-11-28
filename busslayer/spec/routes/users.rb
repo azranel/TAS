@@ -2,9 +2,7 @@ require File.expand_path '../helpers/spec_helper.rb', __FILE__
 
 describe 'Users routes' do
   before :all do
-    unless @u = User.find_by_email('monko@gmail.com')
-      @u = User.create(firstname: 'Monika', lastname: 'Kowalik', email: 'monko@gmail.com', password: 'alalubikotybardzo', phone: '854154673')
-    end
+    @u = create(:user)
   end
 
   describe 'GET /users/:id' do
@@ -34,7 +32,7 @@ describe 'Users routes' do
   describe 'POST /users/login' do
     context 'if user is found and password is good' do
       before :all do
-        response = post '/users/login', { email: @u.email, password: 'alalubikotybardzo'}
+        response = post '/users/login', { email: @u.email, password: 'alamakota'}
         @response = JSON.parse(response.body)
       end
 

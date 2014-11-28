@@ -18,19 +18,7 @@ describe 'Bills routes' do
 
     context 'if found' do
       before :all do
-        user = User.create(firstname: 'Jan',
-                           lastname: 'Kowalski',
-                           email: 'janko@wp.pl',
-                           password: 'alamakota',
-                           phone: '666157555')
-        apartment = Apartment.create(name: 'BOLS',
-                                     description: 'Takie tam heheszki',
-                                     address: 'Chrobrego 25B/14',
-                                     city: 'Poznań')
-        @bill = Bill.create(name:'Prąd i gaz',
-                            description: 'Prąd i gaz - styczeń',
-                            value: 174.69, owner: user,
-                            apartment: apartment)
+        @bill = create(:bill)
         @response = get "/bills/#{ @bill.id }"
         @response = JSON.parse(@response.body)
       end
@@ -83,15 +71,8 @@ describe 'Bills routes' do
 
     context 'params are correct' do
       before :all do
-        user = User.create(firstname: 'Jan',
-                           lastname: 'Kowalski',
-                           email: 'janka@wp.pl',
-                           password: 'alamakota',
-                           phone: '666157555')
-        apartment = Apartment.create(name: 'BOLS',
-                                     description: 'Takie tam heheszki',
-                                     address: 'Chrobrego 25B/14',
-                                     city: 'Poznań')
+        user = create(:user)
+        apartment = create(:apartment)
         @response = post '/bills/create', bill:
           { name: 'Mop', description: 'Takie tam',
             value: 35.99, apartment_id: apartment.id,
@@ -128,19 +109,7 @@ describe 'Bills routes' do
 
     context 'if found' do
       before :all do
-        user = User.create(firstname: 'Jan',
-                           lastname: 'Kowalski',
-                           email: 'jankaz@wp.pl',
-                           password: 'alamakota',
-                           phone: '666157555')
-        apartment = Apartment.create(name: 'BOLSa',
-                                     description: 'Takie tam heheszki',
-                                     address: 'Chrobrego 24B/14',
-                                     city: 'Poznań')
-        @bill = Bill.create(name:'Prądz i gaz',
-                            description: 'Prądz i gaz - styczeń',
-                            value: 174.69, owner: user,
-                            apartment: apartment)
+        @bill = create(:bill)
         @response = delete "/bills/#{ @bill.id }"
         @response = JSON.parse(@response.body)
       end

@@ -2,8 +2,8 @@ require File.expand_path '../helpers/spec_helper.rb', __FILE__
 
 describe "User" do
   before :all do 
-      @u = User.new(firstname:"Jan", lastname: "Kowalski", email: "janko@wp.pl", password: "alamakota123", phone: "123456789")
-      @u.save
+      @hash = attributes_for(:user)
+      @u = User.create(@hash)
   end
 
   describe "validations" do
@@ -28,7 +28,7 @@ describe "User" do
     end
 
     it "email uniqueness" do
-      u2 = User.new(firstname: "Jan", lastname: "Nowak", email: "janko@wp.pl", password: "alamakota123", phone:"123445434")
+      u2 = User.new(@hash)
       expect(u2).not_to be_valid
     end
   end

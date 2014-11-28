@@ -3,7 +3,7 @@ require File.expand_path '../helpers/spec_helper.rb', __FILE__
 describe "Apartment" do
   describe "validations" do
     before :all do
-      @a = Apartment.new(name: 'Bols', address: 'Dalekoodrusa', city: 'Poznan', user_id: 0, description: 'Duze ale zimne')
+      @a = create(:apartment)
     end
 
     it "name" do

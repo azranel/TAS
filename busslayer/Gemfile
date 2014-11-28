@@ -1,21 +1,21 @@
-# define our source to look for gems
-source "http://rubygems.org/"
+source 'http://rubygems.org/'
 
 # declare the sinatra dependency
-gem "sinatra"
+gem 'sinatra'
 
 # database gems
-gem "activerecord"
-gem "sinatra-activerecord"
-gem "pg"
+gem 'activerecord'
+gem 'sinatra-activerecord'
+gem 'pg'
 
-#rake for tasks
-gem "rake"
+# rake for tasks
+gem 'rake'
 
-#others
+# others
 gem 'annotate', '~> 2.6.5'
 gem 'bcrypt'
 gem 'rspec'
 gem 'rack-test'
 gem 'database_cleaner'
-gem "codeclimate-test-reporter"
+gem 'codeclimate-test-reporter'
+gem 'factory_girl'

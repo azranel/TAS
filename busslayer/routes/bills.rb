@@ -38,6 +38,32 @@ module Sinatra
       end
 
       def self.delete(app)
+        app.delete "/bills/delete" do
+          content_type :json
+          bill = Bill.find_by_id(params[:id])
+          if bill
+            bill.destroy
+            { status: 200 }.to_json
+          else
+            { status: 404 }.to_json
+          end
+        end
+      end
+
+      def self.update(app)
+        app.put '/bills/update' do
+          content_type :json
+          bill = Bill.find_by_id(params[:id])
+          if bill
+            bill.update(params[:bill])
+            { status: 200 }.to_json
+          else
+            { status: 404 }.to_json
+          end
+        end
+      end
+
+      def self.delete(app)
         app.delete '/bills/:id' do
           bill = Bill.find_by_id(params[:id])
           if bill

@@ -1,14 +1,9 @@
 require File.expand_path '../helpers/spec_helper.rb', __FILE__
+require 'factory_girl'
 
 describe 'Bill' do
   before :all do
-    user = User.create(firstname: 'Jan', lastname:'Kowalski',
-      email:'janko@wp.pl',password:'alamakota',phone:'666174555')
-    apartment = Apartment.create(name:'BOLS',description:'Takie tam',
-      address:'Chrobrego 13a/4', city: 'Poznań')
-    @b = Bill.create(name: 'Rachunek za gaz i prąd', 
-      description: 'Taki tam rachunek heheszki',
-      value: 154.69, owner: user, apartment: apartment)
+    @b = create(:bill)
   end
 
   describe 'validations' do

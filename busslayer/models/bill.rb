@@ -16,7 +16,7 @@ class Bill < ActiveRecord::Base
   belongs_to :owner, class_name: "User", foreign_key: 'user_id'
   belongs_to :apartment
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
   validates :value, presence: true, 
         format: { with: /^.*\.\d{0,2}$/, multiline: true, message: 'value can have only 2 decimal places'}
   validates :apartment, presence: true
