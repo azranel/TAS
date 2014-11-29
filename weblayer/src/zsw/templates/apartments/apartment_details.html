@@ -46,6 +46,8 @@
                         <td>Description</td>
                         <td>Value</td>
                         <td>Value/person</td>
+                        <td>Edit</td>
+                        <td>Delete</td>
                     </tr>
                     {% for bill in apartment.bills %}
                         <tr>
@@ -53,6 +55,8 @@
                             <td>{{ bill.description }}</td>
                             <td>{{ bill.value }}</td>
                             <td>{{ bill.divide }}</td>
+                            <td><a href="/bills/edit/{{ bill.id }}">Edit</a></td>
+                            <td><a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Delete</a></td>
                         </tr>
                     {% endfor %}
                 </table>

@@ -5,6 +5,7 @@ module Sinatra
         fetch(app)
         create(app)
         delete(app)
+        update(app)
       end
 
       def self.fetch(app)
@@ -38,7 +39,7 @@ module Sinatra
       end
 
       def self.delete(app)
-        app.delete "/bills/delete" do
+        app.delete "/bills/:id" do
           content_type :json
           bill = Bill.find_by_id(params[:id])
           if bill
@@ -51,9 +52,10 @@ module Sinatra
       end
 
       def self.update(app)
-        app.put '/bills/update' do
+        app.post '/bills/:id/edit' do
           content_type :json
           bill = Bill.find_by_id(params[:id])
+          puts "***POCZATEK", params.to_s, "KONIEC***"
           if bill
             bill.update(params[:bill])
             { status: 200 }.to_json

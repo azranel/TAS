@@ -184,6 +184,14 @@ def fetch_apartment(apartment_id):
 
     return content
 
+def fetch_bill(bill_id):
+    h = httplib2.Http()
+    resp, content = h.request(SERVER + "bills/" + str(bill_id),
+                              method="GET")
+    content = json.loads(content)
+
+    return content
+
 
 def delete_apartment(request, apartment_id):
     h = httplib2.Http()
@@ -235,7 +243,7 @@ def apartment_details(request, apartment_id):
 
     if request.method == 'POST':
         form_resident = forms.AddResidentToApartmentForm(request.POST)
-        form_bill = forms.AddBillToApartmentForm(request.POST)
+        form_bill = forms.BillForm(request.POST)
         if form_resident.is_valid():
             form_dict = {
                 'email': form_resident.cleaned_data['email'],
@@ -255,7 +263,7 @@ def apartment_details(request, apartment_id):
                               'login_data': status,
                               'apartment': apartment,
                               'form_resident': form_resident,
-                              'form_bill': forms.AddBillToApartmentForm()
+                              'form_bill': forms.BillForm()
                               })
         elif form_bill.is_valid():
             form_dict = {
@@ -285,7 +293,7 @@ def apartment_details(request, apartment_id):
                               })
         else:
             form_resident = forms.AddResidentToApartmentForm()
-            form_bill = forms.AddBillToApartmentForm()
+            form_bill = forms.BillForm()
             apartment = fetch_apartment(apartment_id)
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
@@ -295,7 +303,7 @@ def apartment_details(request, apartment_id):
                               })
     else:
         form_resident = forms.AddResidentToApartmentForm()
-        form_bill = forms.AddBillToApartmentForm()
+        form_bill = forms.BillForm()
         apartment = fetch_apartment(apartment_id)
         response = render(request, 'apartments/apartment_details.html', {
                           'login_data': status,
@@ -305,6 +313,52 @@ def apartment_details(request, apartment_id):
                           })
     return response
 
+def delete_bill(request, bill_id):
+    h = httplib2.Http()
+    resp, content = h.request(SERVER + "bills/" + str(bill_id),
+                              method="DELETE")
+
+    response = HttpResponseRedirect('/apartments')
+
+    return response
+
+def edit_bill(request, bill_id):
+    status = check_session(request)
+    if request.method == 'POST':
+        form = forms.BillForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'name': form.cleaned_data['name'],
+                'value': form.cleaned_data['value'],
+                'description': form.cleaned_data['description']
+            }
+
+            bodystr = "bill[name]=" + form_dict['name'] + \
+                   "&bill[description]=" + form_dict['description'] + \
+                   "&bill[value]=" + str(form_dict['value'])
+
+            print bodystr
+
+            h = httplib2.Http()
+            resp, content = h.request(SERVER + "bills/" + bill_id + "/edit",
+                                      method="POST",
+                                      body=bodystr)
+            # content = json.loads(content)
+            response = HttpResponseRedirect('/apartments/')
+
+    else:
+        bill_info = fetch_bill(bill_id)
+        form = forms.BillForm({
+            'name': bill_info['name'],
+            'value': bill_info['value'],
+            'description': bill_info.get('description')})
+        response = render(request, 'bills/edit_bill.html', {
+                          'form': form,
+                          'login_data': status,
+                          })
+
+    
+    return response
 
 def edit_apartment(request, apartment_id):
     status = check_session(request)

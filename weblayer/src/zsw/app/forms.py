@@ -75,7 +75,7 @@ class AddResidentToApartmentForm(forms.Form):
                                         'class': 'form-control form-group',
                                         'required': ''}))
 
-class AddBillToApartmentForm(forms.Form):
+class BillForm(forms.Form):
     name = forms.CharField(label='',
                             widget=forms.TextInput(attrs={
                                         'placeholder': 'Name',
