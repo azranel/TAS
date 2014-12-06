@@ -2,12 +2,10 @@
 
 from django.shortcuts import render, render_to_response, HttpResponseRedirect
 from django.contrib.sessions.backends.db import SessionStore
+from zsw.zsw import settings
 import zsw.app.forms as forms
 import httplib2
 import json
-
-
-SERVER = "http://0.0.0.0:4567/"
 
 
 def check_session():
@@ -42,7 +40,7 @@ def login(request, status):
                    form_dict['password']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "users/login",
+            resp, content = h.request(settings.SERVER + "users/login",
                                       method="POST",
                                       body=body)
             content = json.loads(content)
@@ -89,7 +87,7 @@ def login(request, status):
 
 def fetch(user_id):
     h = httplib2.Http()
-    resp, content = h.request(SERVER + "users/" + str(user_id),
+    resp, content = h.request(settings.SERVER + "users/" + str(user_id),
                               method="GET")
     content = json.loads(content)
     return content
@@ -113,7 +111,7 @@ def register(request):
                 "&user[phone]=" + form_dict['phone']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "users/register",
+            resp, content = h.request(settings.SERVER + "users/register",
                                       method="POST",
                                       body=body)
             content = json.loads(content)
@@ -184,8 +182,10 @@ def signout(request):
 ### APARTMENTS
 def fetch_apartment(apartment_id):
     h = httplib2.Http()
-    resp, content = h.request(SERVER + "apartments/" + str(apartment_id),
-                              method="GET")
+    resp, content = h.request(
+        settings.SERVER + "apartments/" + str(apartment_id),
+        method="GET"
+    )
     content = json.loads(content)
 
     return content
@@ -193,7 +193,7 @@ def fetch_apartment(apartment_id):
 
 def fetch_bill(bill_id):
     h = httplib2.Http()
-    resp, content = h.request(SERVER + "bills/" + str(bill_id),
+    resp, content = h.request(settings.SERVER + "bills/" + str(bill_id),
                               method="GET")
     content = json.loads(content)
 
@@ -202,9 +202,10 @@ def fetch_bill(bill_id):
 
 def delete_apartment(request, apartment_id):
     h = httplib2.Http()
-    resp, content = h.request(SERVER + "apartments/" + str(apartment_id) +
-                              "/delete",
-                              method="GET")
+    resp, content = h.request(
+        settings.SERVER + "apartments/" + str(apartment_id) + "/delete",
+        method="GET"
+    )
     content = json.loads(content)
 
     if content['status'] == 200:
@@ -261,7 +262,7 @@ def apartment_details(request, status, apartment_id):
                 "&email=" + form_dict['email']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "apartments/" +
+            resp, content = h.request(settings.SERVER + "apartments/" +
                                       apartment_id + "/addresident",
                                       method="POST",
                                       body=body)
@@ -288,7 +289,7 @@ def apartment_details(request, status, apartment_id):
                 "&bill[apartment_id]=" + apartment_id
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "bills/create",
+            resp, content = h.request(settings.SERVER + "bills/create",
                                       method="POST",
                                       body=body)
             content = json.loads(content)
@@ -326,7 +327,7 @@ def apartment_details(request, status, apartment_id):
 
 def delete_bill(request, bill_id):
     h = httplib2.Http()
-    resp, content = h.request(SERVER + "bills/" + str(bill_id),
+    resp, content = h.request(settings.SERVER + "bills/" + str(bill_id),
                               method="DELETE")
 
     response = HttpResponseRedirect('/apartments')
@@ -352,10 +353,11 @@ def edit_bill(request, status, bill_id):
             print bodystr
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "bills/" + bill_id + "/edit",
-                                      method="POST",
-                                      body=bodystr)
-            # content = json.loads(content)
+            resp, content = h.request(
+                settings.SERVER + "bills/" + bill_id + "/edit",
+                method="POST",
+                body=bodystr
+            )
             response = HttpResponseRedirect('/apartments/')
 
     else:
@@ -390,10 +392,11 @@ def edit_apartment(request, status, apartment_id):
                    "&apartment[description]=" + form_dict['description']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "apartments/" + apartment_id +
-                                      "/update",
-                                      method="POST",
-                                      body=body)
+            resp, content = h.request(
+                settings.SERVER + "apartments/" + apartment_id + "/update",
+                method="POST",
+                body=body
+            )
             content = json.loads(content)
 
             if content['status'] == 200:
@@ -444,7 +447,7 @@ def create_apartment(request, status):
                    "&apartment[description]=" + form_dict['description']
 
             h = httplib2.Http()
-            resp, content = h.request(SERVER + "apartments/create",
+            resp, content = h.request(settings.SERVER + "apartments/create",
                                       method="POST",
                                       body=body)
             content = json.loads(content)
