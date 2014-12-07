@@ -323,8 +323,10 @@ def apartment_details(request, status, apartment_id):
 
 def delete_bill(request, bill_id):
     """ Delete bill by id from the server database. """
-    request_server("bills/" + str(bill_id), "DELETE", "")
-    response = HttpResponseRedirect('/apartments')
+    content = request_server("bills/" + str(bill_id), "DELETE", "")
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
 
     return response
 
@@ -344,8 +346,14 @@ def edit_bill(request, status, bill_id):
             body = "bill[name]=" + form_dict['name'] + \
                    "&bill[description]=" + form_dict['description'] + \
                    "&bill[value]=" + str(form_dict['value'])
-            request_server("bills/" + bill_id + "/edit", "POST", body)
-            response = HttpResponseRedirect('/apartments/')
+            content = request_server(
+                "bills/" + bill_id + "/edit",
+                "POST",
+                body
+            )
+            response = HttpResponseRedirect(
+                '/apartments/' + str(content['apartment_id'])
+            )
 
     else:
         bill_info = fetch_bill(bill_id)

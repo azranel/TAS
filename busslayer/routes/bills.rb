@@ -55,10 +55,9 @@ module Sinatra
         app.post '/bills/:id/edit' do
           content_type :json
           bill = Bill.find_by_id(params[:id])
-          puts "***POCZATEK", params.to_s, "KONIEC***"
           if bill
             bill.update(params[:bill])
-            { status: 200 }.to_json
+            { status: 200, apartment_id: bill.apartment_id }.to_json
           else
             { status: 404 }.to_json
           end
@@ -69,7 +68,7 @@ module Sinatra
         app.delete '/bills/:id' do
           bill = Bill.find_by_id(params[:id])
           if bill
-            { status: 200 }.to_json if bill.delete
+            { status: 200, apartment_id: bill.apartment_id }.to_json if bill.delete
           else
             { status: 404 }.to_json
           end
