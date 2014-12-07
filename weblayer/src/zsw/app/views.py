@@ -9,6 +9,10 @@ import json
 
 
 def check_session():
+    """
+    Check if user is logged in.
+    Return dict of user id and login or empty dict.
+    """
     def get_user(func):
         def wrapper(request, *callback_args, **callback_kwargs):
             if 'key' in request.COOKIES:
@@ -26,9 +30,26 @@ def check_session():
     return get_user
 
 
+def request_server(path, method, body):
+    """
+    Send request to the server.
+    Return dict.
+    """
+    h = httplib2.Http()
+    _, content = h.request(
+        settings.SERVER + path,
+        method=method,
+        body=body
+    )
+    content = json.loads(content)
+
+    return content
+
+
 ### USER
 @check_session()
 def login(request, status):
+    """ Sign in form """
     if request.method == 'POST':
         form = forms.SignInForm(request.POST)
         if form.is_valid():
@@ -38,12 +59,7 @@ def login(request, status):
             }
             body = "email=" + form_dict['login'] + "&password=" + \
                    form_dict['password']
-
-            h = httplib2.Http()
-            resp, content = h.request(settings.SERVER + "users/login",
-                                      method="POST",
-                                      body=body)
-            content = json.loads(content)
+            content = request_server("users/login", "POST", body)
 
             if content['status'] == 200:
                 s = SessionStore()
@@ -86,14 +102,15 @@ def login(request, status):
 
 
 def fetch(user_id):
-    h = httplib2.Http()
-    resp, content = h.request(settings.SERVER + "users/" + str(user_id),
-                              method="GET")
-    content = json.loads(content)
-    return content
+    """
+    Fetch user data by id from server.
+    Return dict.
+    """
+    return request_server("users/" + str(user_id), "GET", "")
 
 
 def register(request):
+    """ Sign up form """
     if request.method == 'POST':
         form = forms.SignUpForm(request.POST)
         if form.is_valid():
@@ -109,12 +126,7 @@ def register(request):
                 "&user[email]=" + form_dict['login'] + \
                 "&user[password]=" + form_dict['password'] + \
                 "&user[phone]=" + form_dict['phone']
-
-            h = httplib2.Http()
-            resp, content = h.request(settings.SERVER + "users/register",
-                                      method="POST",
-                                      body=body)
-            content = json.loads(content)
+            content = request_server("users/register", "POST", body)
 
             if content['status'] == 200:
                 s = SessionStore()
@@ -153,6 +165,7 @@ def register(request):
 
 @check_session()
 def user_details(request, status, user_id):
+    """ View of user details. """
     user_info = fetch(user_id)
     response = render(request, 'user/user_details.html', {
                       'login_data': status,
@@ -162,16 +175,19 @@ def user_details(request, status, user_id):
 
 
 def signup(request):
+    """ View of sign up form. """
     response = register(request)
     return response
 
 
 def signin(request):
+    """ View of sign in form. """
     response = login(request)
     return response
 
 
 def signout(request):
+    """ View of sign out form. """
     response = render_to_response('app/index.html', {
                                   'login_data': {'signout': True}
                                   })
@@ -181,32 +197,26 @@ def signout(request):
 
 ### APARTMENTS
 def fetch_apartment(apartment_id):
-    h = httplib2.Http()
-    resp, content = h.request(
-        settings.SERVER + "apartments/" + str(apartment_id),
-        method="GET"
-    )
-    content = json.loads(content)
-
-    return content
+    """
+    Fetch apartment data by id from server.
+    Return dict.
+    """
+    return request_server("apartments/" + str(apartment_id), "GET", "")
 
 
 def fetch_bill(bill_id):
-    h = httplib2.Http()
-    resp, content = h.request(settings.SERVER + "bills/" + str(bill_id),
-                              method="GET")
-    content = json.loads(content)
-
-    return content
+    """
+    Fetch bill data by id from server.
+    Return dict.
+    """
+    return request_server("bills/" + str(bill_id), "GET", "")
 
 
 def delete_apartment(request, apartment_id):
-    h = httplib2.Http()
-    resp, content = h.request(
-        settings.SERVER + "apartments/" + str(apartment_id) + "/delete",
-        method="GET"
+    """ Delete apartment by id in server database. """
+    content = request_server(
+        "apartments/" + str(apartment_id) + "/delete", "GET", ""
     )
-    content = json.loads(content)
 
     if content['status'] == 200:
         response = HttpResponseRedirect('/apartments')
@@ -216,41 +226,34 @@ def delete_apartment(request, apartment_id):
     return response
 
 
-def get_list_of_owned_apartments(request, status):
+def get_lists_of_apartments(request, status):
+    """ Get lists of owned and ressident apartments. """
     user_info = fetch(status['id'])
 
-    return user_info.get('owned')
-
-
-def get_list_of_ressident_apartments(request, status):
-    user_info = fetch(status['id'])
-
-    return user_info.get('apartments')
+    return user_info.get('owned'), user_info.get('apartments')
 
 
 @check_session()
 def apartments(request, status):
+    """ View of all assigned apartments. """
     if status != {}:
-        list_of_owned_apartments = get_list_of_owned_apartments(
-            request,
-            status
-        )
-        list_of_resident_apartments = get_list_of_ressident_apartments(
+        owned_apartments, resident_apartments = get_lists_of_apartments(
             request,
             status
         )
     else:
-        list_of_owned_apartments = []
-        list_of_resident_apartments = []
+        owned_apartments = []
+        resident_apartments = []
     return render(request, 'apartments/apartments.html', {
                   'login_data': status,
-                  'list_of_owned_apartments': list_of_owned_apartments,
-                  'list_of_resident_apartments': list_of_resident_apartments,
+                  'list_of_owned_apartments': owned_apartments,
+                  'list_of_resident_apartments': resident_apartments,
                   })
 
 
 @check_session()
 def apartment_details(request, status, apartment_id):
+    """ View of apartment details. """
     if request.method == 'POST':
         form_resident = forms.AddResidentToApartmentForm(request.POST)
         form_bill = forms.BillForm(request.POST)
@@ -260,13 +263,11 @@ def apartment_details(request, status, apartment_id):
             }
             body = "user_id=" + str(status['id']) + \
                 "&email=" + form_dict['email']
-
-            h = httplib2.Http()
-            resp, content = h.request(settings.SERVER + "apartments/" +
-                                      apartment_id + "/addresident",
-                                      method="POST",
-                                      body=body)
-            content = json.loads(content)
+            request_server(
+                "apartments/" + apartment_id + "/addresident",
+                "POST",
+                body
+            )
 
             apartment = fetch_apartment(apartment_id)
             response = render(request, 'apartments/apartment_details.html', {
@@ -287,12 +288,7 @@ def apartment_details(request, status, apartment_id):
                 "&bill[description]=" + form_dict['description'] + \
                 "&bill[value]=" + form_dict['value'] + \
                 "&bill[apartment_id]=" + apartment_id
-
-            h = httplib2.Http()
-            resp, content = h.request(settings.SERVER + "bills/create",
-                                      method="POST",
-                                      body=body)
-            content = json.loads(content)
+            request_server("bills/create", "POST", body)
 
             apartment = fetch_apartment(apartment_id)
             response = render(
@@ -326,10 +322,8 @@ def apartment_details(request, status, apartment_id):
 
 
 def delete_bill(request, bill_id):
-    h = httplib2.Http()
-    resp, content = h.request(settings.SERVER + "bills/" + str(bill_id),
-                              method="DELETE")
-
+    """ Delete bill by id from the server database. """
+    request_server("bills/" + str(bill_id), "DELETE", "")
     response = HttpResponseRedirect('/apartments')
 
     return response
@@ -337,6 +331,7 @@ def delete_bill(request, bill_id):
 
 @check_session()
 def edit_bill(request, status, bill_id):
+    """ View of bill edit form. """
     if request.method == 'POST':
         form = forms.BillForm(request.POST)
         if form.is_valid():
@@ -346,18 +341,10 @@ def edit_bill(request, status, bill_id):
                 'description': form.cleaned_data['description']
             }
 
-            bodystr = "bill[name]=" + form_dict['name'] + \
-                      "&bill[description]=" + form_dict['description'] + \
-                      "&bill[value]=" + str(form_dict['value'])
-
-            print bodystr
-
-            h = httplib2.Http()
-            resp, content = h.request(
-                settings.SERVER + "bills/" + bill_id + "/edit",
-                method="POST",
-                body=bodystr
-            )
+            body = "bill[name]=" + form_dict['name'] + \
+                   "&bill[description]=" + form_dict['description'] + \
+                   "&bill[value]=" + str(form_dict['value'])
+            request_server("bills/" + bill_id + "/edit", "POST", body)
             response = HttpResponseRedirect('/apartments/')
 
     else:
@@ -376,6 +363,7 @@ def edit_bill(request, status, bill_id):
 
 @check_session()
 def edit_apartment(request, status, apartment_id):
+    """ View of apartment edit form. """
     if request.method == 'POST':
         form = forms.ApartmentForm(request.POST)
         if form.is_valid():
@@ -390,15 +378,11 @@ def edit_apartment(request, status, apartment_id):
                    "&apartment[address]=" + form_dict['address'] + \
                    "&apartment[city]=" + form_dict['city'] + \
                    "&apartment[description]=" + form_dict['description']
-
-            h = httplib2.Http()
-            resp, content = h.request(
-                settings.SERVER + "apartments/" + apartment_id + "/update",
-                method="POST",
-                body=body
+            content = request_server(
+                "apartments/" + apartment_id + "/update",
+                "POST",
+                body
             )
-            content = json.loads(content)
-
             if content['status'] == 200:
                 response = HttpResponseRedirect('/apartments/' +
                                                 str(apartment_id))
@@ -429,6 +413,7 @@ def edit_apartment(request, status, apartment_id):
 
 @check_session()
 def create_apartment(request, status):
+    """ View of apartment create form. """
     if request.method == 'POST':
         form = forms.ApartmentForm(request.POST)
         if form.is_valid():
@@ -445,12 +430,7 @@ def create_apartment(request, status):
                    "&apartment[city]=" + form_dict['city'] + \
                    "&apartment[user_id]=" + str(form_dict['owner_id']) + \
                    "&apartment[description]=" + form_dict['description']
-
-            h = httplib2.Http()
-            resp, content = h.request(settings.SERVER + "apartments/create",
-                                      method="POST",
-                                      body=body)
-            content = json.loads(content)
+            content = request_server("apartments/create", "POST", body)
 
             if content['status'] == 200:
                 response = HttpResponseRedirect('/apartments')
@@ -472,6 +452,7 @@ def create_apartment(request, status):
 ### APP
 @check_session()
 def index(request, status):
+    """ View of main side. """
     return render(request, 'app/index.html', {
                   'login_data': status,
                   })
@@ -479,6 +460,7 @@ def index(request, status):
 
 @check_session()
 def about(request, status):
+    """ View of about side. """
     return render(request, 'app/about.html', {
                   'login_data': status,
                   })
@@ -486,6 +468,7 @@ def about(request, status):
 
 @check_session()
 def contact(request, status):
+    """ View of contact side. """
     return render(request, 'app/contact.html', {
                   'login_data': status,
                   })
