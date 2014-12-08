@@ -17,6 +17,7 @@ module Sinatra
           a.bills.each do |bill|
             bill_hash = {}
             bill_hash['users'] = []
+            bill_hash['users_ids'] = []
             bill.users.each do |user|
               user_data = {
                 'id' => user.id,
@@ -24,6 +25,7 @@ module Sinatra
                 'lastname' => user.lastname
               }
               bill_hash['users'] << user_data
+              bill_hash['users_ids'] << user.id
             end
             bill_hash['bill_id'] = bill.id
             user_bills_list << bill_hash

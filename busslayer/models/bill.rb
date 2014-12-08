@@ -26,9 +26,9 @@ class Bill < ActiveRecord::Base
   validates :apartment, presence: true
   validates :owner, presence: true
 
-  def divide(persons_number=apartment.users.count)
-    return value if persons_number.zero?
-    divided = self.value / persons_number
+  def divide(number_of_debtors=self.users.count)
+    return value if number_of_debtors.zero?
+    divided = self.value / number_of_debtors
     divided.round(2)
   end
 

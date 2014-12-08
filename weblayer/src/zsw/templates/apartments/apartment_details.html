@@ -67,7 +67,16 @@
                                         {% else %}
                                             Nikt
                                         {% endif %}
-                                        +
+                                        <a class="add_debtor">+</a>
+                                        <div class="residents_list hidden">
+                                            {% for resident in apartment.residents %}
+                                                {% if resident.id not in debtor.users_ids %}
+                                                    <label><input type="checkbox" name="{{ resident.id }}"> {{ resident.firstname }} {{ resident.lastname }}</label><br />
+                                                {% endif %}
+                                            {% endfor %}
+                                            <input class="btn btn-lg btn-primary btn-block btn-adddebtor" type="submit" value="dodaj">
+                                            <a data-method="POST" class="add_debtor hidden" href="/bills/{{ bill.id }}/adddebtors/" rel="nofollow">dodaj</a>
+                                        </div>
                                     {% endif %}
                                 {% endfor %}
                             </td>
@@ -108,4 +117,6 @@
         {% else %}
             <div>Proszę się przelogować</div>
         {% endif %}
+        {% load staticfiles %}
+        <script type="text/javascript" src="{% static 'js/apartments_details.js' %}"></script>
 {% endblock %}

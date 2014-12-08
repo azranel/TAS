@@ -7,6 +7,7 @@ module Sinatra
         update(app)
         delete(app)
         add_debtor(app)
+        add_debtors(app)
         delete_debtor(app)
       end
 
@@ -70,9 +71,30 @@ module Sinatra
           content_type :json
           debtor = User.find_by_id(params[:user_id])
           bill = Bill.find_by_id(params[:id])
-          bill.users << debtor
-          bill.save
-          { status: 200 }.to_json
+          if bill
+            bill.users << debtor
+            bill.save
+            { status: 200, apartment_id: bill.apartment_id }.to_json
+          else
+            { status: 404, apartment_id: bill.apartment_id }.to_json
+          end
+        end
+      end
+
+      def self.add_debtors(app)
+        app.post '/bills/:id/adddebtors' do
+          content_type :json
+          bill = Bill.find_by_id(params[:id])
+          if bill
+            params[:user_ids_list].split(',').each do |user_id|
+              debtor = User.find_by_id(user_id)
+              bill.users << debtor
+            end
+            bill.save
+            { status: 200, apartment_id: bill.apartment_id }.to_json
+          else
+            { status: 404, apartment_id: bill.apartment_id }.to_json
+          end
         end
       end
 

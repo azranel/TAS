@@ -288,18 +288,26 @@ def delete_user_from_bill(request, bill_id, debtor_id):
     return response
 
 
-def add_users_to_bill(request, status, bill_id, debtors):
+def add_user_to_bill(request, bill_id, debtor_ids):
     """ Send request to add debtor to the bill. """
-    list_of_debtors = [debtor['id'] for debtor in debtors]
+    body = "user_ids_list=" + debtor_ids
 
-    for debtor in list_of_debtors:
-        body = "user_id=" + str(debtor)
+    content = request_server(
+        "bills/" + str(bill_id) + "/adddebtors",
+        "POST",
+        body
+    )
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
 
-        request_server(
-            "bills/" + str(bill_id) + "/adddebtor",
-            "POST",
-            body
-        )
+    return response
+
+
+def add_users_list_to_bill(request, bill_id, debtors):
+    """ Send request to add list of debtors to the bill. """
+    list_of_debtors = [str(debtor['id']) for debtor in debtors]
+    return add_user_to_bill(request, bill_id, ",".join(list_of_debtors))
 
 
 def add_bill(request, status, form_bill, apartment_id):
@@ -318,14 +326,12 @@ def add_bill(request, status, form_bill, apartment_id):
     content = request_server("bills/create", "POST", body)
 
     apartment = fetch_apartment(apartment_id)
-    add_users_to_bill(request, status, content['id'], apartment['residents'])
 
-    return render(request, 'apartments/apartment_details.html', {
-        'login_data': status,
-        'apartment': apartment,
-        'form_resident': forms.AddResidentToApartmentForm(),
-        'form_bill': form_bill
-    })
+    return add_users_list_to_bill(
+        request,
+        content['id'],
+        apartment['residents']
+    )
 
 
 @check_session()
