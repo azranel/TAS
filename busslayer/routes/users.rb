@@ -49,13 +49,15 @@ module Sinatra
             hash['apartments_info'] = []
             hash['apartments_ids'] = []
             u.bills.each do |bill|
-              user_data = {
-                'apartment_id' => bill.apartment_id,
-                'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
-                'value' => bill.divide,
-              }
-              hash['apartments_info'] << user_data
-              hash['apartments_ids'] << bill.apartment_id
+              if bill.user_id != u.id
+                user_data = {
+                  'apartment_id' => bill.apartment_id,
+                  'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
+                  'value' => bill.divide,
+                }
+                hash['apartments_info'] << user_data
+                hash['apartments_ids'] << bill.apartment_id
+              end
             end
             hash['apartments_info'].each do |apartment|
               if hash['list_of_apartments'][apartment['apartment_id']].nil?
