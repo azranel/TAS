@@ -80,8 +80,12 @@
                                     {% endif %}
                                 {% endfor %}
                             </td>
-                            <td><a href="/bills/edit/{{ bill.id }}">Edytuj</a>,
-                            <a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Usuń</a></td>
+                            <td>
+                            {% if bill.user_id == login_data.id %}
+                                <a href="/bills/edit/{{ bill.id }}">Edytuj</a>,
+                                <a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Usuń</a>
+                            {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
