@@ -9,6 +9,7 @@ module Sinatra
         bills(app)
         add_resident(app)
       end
+
       def self.fetch(app)
         app.get  '/apartments/:id' do
           content_type :json
@@ -39,6 +40,7 @@ module Sinatra
           end
         end
       end
+
       def self.delete(app)
         app.get  '/apartments/:id/delete' do
           content_type :json
@@ -50,6 +52,7 @@ module Sinatra
           end
         end
       end
+
       def self.create(app)
         app.post '/apartments/create' do
           content_type :json
@@ -61,6 +64,7 @@ module Sinatra
           end
         end
       end
+
       def self.update(app)
         app.post '/apartments/:id/update' do
           content_type :json
@@ -76,21 +80,27 @@ module Sinatra
           end
         end
       end
+
       def self.bills(app)
         app.get '/apartments/:id/bills' do
           bills = Apartment.find_by_id(params[:id]).bills
           bills.to_json
         end
       end
+
       def self.add_resident(app)
         app.post '/apartments/:id/addresident' do
           content_type :json
           resident = User.find_by_id(params[:user_id])
           apartment = Apartment.find_by_id(params[:id])
           user = User.find_by_email(params[:email])
-          apartment.users << user
-          apartment.save
-          { status: 200 }.to_json
+          if user
+            apartment.users << user
+            apartment.save
+            { status: 200 }.to_json
+          else
+            { status: 404 }.to_json
+          end
           # if apartment.have_user?(resident)
           #   user = User.find_by_email(params[:email])
           #   if user
