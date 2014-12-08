@@ -1,3 +1,4 @@
+# == Schema Information
 #
 # Table name: users
 #
@@ -21,9 +22,12 @@ class User < ActiveRecord::Base
   validates :phone, presence: true
   validates :email, confirmation: true, uniqueness: true
 
-  has_many :bills
-  has_many :apartments, :through => :users_apartments
+  has_many :users_bills
+  has_many :bills, :through => :users_bills
+
   has_many :users_apartments
+  has_many :apartments, :through => :users_apartments
+
   has_secure_password
 
   def fetch_hash(status_value=200, values=[:id, :firstname, :lastname, :email, :phone, :apartments])

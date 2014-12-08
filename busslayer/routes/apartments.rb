@@ -13,10 +13,25 @@ module Sinatra
         app.get  '/apartments/:id' do
           content_type :json
           a = Apartment.find_by_id(params[:id])
+          user_bills_list = []
+          a.bills.each do |bill|
+            bill_hash = {}
+            bill_hash['users'] = []
+            bill.users.each do |user|
+              user_data = {
+                'id' => user.id,
+                'firstname' => user.firstname,
+                'lastname' => user.lastname
+              }
+              bill_hash['users'] << user_data
+            end
+            bill_hash['bill_id'] = bill.id
+            user_bills_list << bill_hash
+          end
           if a
             hash = { status: 200, id: a.id, name: a.name, address: a.address, city: a.city,
              description: a.description, owner: a.user, residents: a.users, bills: a.bills,
-             residents_count: a.users.count }.to_json(methods: :divide)
+             user_bills_list: user_bills_list, residents_count: a.users.count }.to_json(methods: :divide)
           else
             { status: 404 }.to_json
           end

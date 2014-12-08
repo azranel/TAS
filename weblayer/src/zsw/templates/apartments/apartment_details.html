@@ -42,21 +42,36 @@
                 <p>Rachunki: </p>
                 <table class="table table-hover">
                     <tr>
-                        <td>Name</td>
-                        <td>Description</td>
-                        <td>Value</td>
-                        <td>Value/person</td>
-                        <td>Edit</td>
-                        <td>Delete</td>
+                        <td>Dodał</td>
+                        <td>Nazwa</td>
+                        <td>Opis</td>
+                        <td>Cena</td>
+                        <td>Cena/os.</td>
+                        <td>Przypisani lokatorzy</td>
+                        <td>Modyfikacje</td>
                     </tr>
                     {% for bill in apartment.bills %}
                         <tr>
+                            <td><a href="/user/{{ bill.user_id }}">{{ bill.user_id }}</a></td>
                             <td>{{ bill.name }}</td>
                             <td>{{ bill.description }}</td>
                             <td>{{ bill.value }}</td>
                             <td>{{ bill.divide }}</td>
-                            <td><a href="/bills/edit/{{ bill.id }}">Edit</a></td>
-                            <td><a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Delete</a></td>
+                            <td>
+                                {% for debtor in apartment.user_bills_list %}
+                                    {% if debtor.bill_id == bill.id  %}
+                                        {% if debtor.users %}
+                                            {% for user in debtor.users %}
+                                                <a href="/user/{{ user.id }}">{{ user.firstname }}</a>,
+                                            {% endfor %}
+                                        {% else %}
+                                            Nikt
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td><a href="/bills/edit/{{ bill.id }}">Edytuj</a>,
+                            <a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Usuń</a></td>
                         </tr>
                     {% endfor %}
                 </table>

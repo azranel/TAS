@@ -251,6 +251,68 @@ def apartments(request, status):
                   })
 
 
+def add_resident(request, form_resident, status, apartment_id):
+    """ Send request to add resident. """
+    form_dict = {
+        'email': form_resident.cleaned_data['email'],
+    }
+    body = "user_id=" + str(status['id']) + \
+        "&email=" + form_dict['email']
+    request_server(
+        "apartments/" + apartment_id + "/addresident",
+        "POST",
+        body
+    )
+
+    apartment = fetch_apartment(apartment_id)
+
+    return render(request, 'apartments/apartment_details.html', {
+        'login_data': status,
+        'apartment': apartment,
+        'form_resident': form_resident,
+        'form_bill': forms.BillForm()
+    })
+
+
+def add_users_to_bill(request, status, bill_id, debtors):
+    list_of_debtors = [debtor['id'] for debtor in debtors]
+
+    for debtor in list_of_debtors:
+        body = "user_id=" + str(debtor)
+
+        request_server(
+            "bills/" + str(bill_id) + "/adddebtor",
+            "POST",
+            body
+        )
+
+
+def add_bill(request, status, form_bill, apartment_id):
+    """ Send request to add bill. """
+    form_dict = {
+        'name': form_bill.cleaned_data['name'],
+        'description': form_bill.cleaned_data['description'],
+        'value': str(form_bill.cleaned_data['value']),
+    }
+
+    body = "bill[user_id]=" + str(status['id']) + \
+        "&bill[name]=" + form_dict['name'] + \
+        "&bill[description]=" + form_dict['description'] + \
+        "&bill[value]=" + form_dict['value'] + \
+        "&bill[apartment_id]=" + apartment_id
+    content = request_server("bills/create", "POST", body)
+
+    apartment = fetch_apartment(apartment_id)
+    add_users_to_bill(request, status, content['id'], apartment['residents'])
+
+    return render(request, 'apartments/apartment_details.html', {
+        'login_data': status,
+        'apartment': apartment,
+        'form_resident': forms.AddResidentToApartmentForm(),
+        'form_bill': form_bill
+    })
+
+
 @check_session()
 def apartment_details(request, status, apartment_id):
     """ View of apartment details. """
@@ -258,46 +320,16 @@ def apartment_details(request, status, apartment_id):
         form_resident = forms.AddResidentToApartmentForm(request.POST)
         form_bill = forms.BillForm(request.POST)
         if form_resident.is_valid():
-            form_dict = {
-                'email': form_resident.cleaned_data['email'],
-            }
-            body = "user_id=" + str(status['id']) + \
-                "&email=" + form_dict['email']
-            request_server(
-                "apartments/" + apartment_id + "/addresident",
-                "POST",
-                body
+            response = add_resident(
+                request,
+                form_resident,
+                status,
+                apartment_id
             )
 
-            apartment = fetch_apartment(apartment_id)
-            response = render(request, 'apartments/apartment_details.html', {
-                              'login_data': status,
-                              'apartment': apartment,
-                              'form_resident': form_resident,
-                              'form_bill': forms.BillForm()
-                              })
         elif form_bill.is_valid():
-            form_dict = {
-                'name': form_bill.cleaned_data['name'],
-                'description': form_bill.cleaned_data['description'],
-                'value': str(form_bill.cleaned_data['value']),
-            }
+            response = add_bill(request, status, form_bill, apartment_id)
 
-            body = "bill[user_id]=" + str(status['id']) + \
-                "&bill[name]=" + form_dict['name'] + \
-                "&bill[description]=" + form_dict['description'] + \
-                "&bill[value]=" + form_dict['value'] + \
-                "&bill[apartment_id]=" + apartment_id
-            request_server("bills/create", "POST", body)
-
-            apartment = fetch_apartment(apartment_id)
-            response = render(
-                request, 'apartments/apartment_details.html', {
-                         'login_data': status,
-                         'apartment': apartment,
-                         'form_resident': forms.AddResidentToApartmentForm(),
-                         'form_bill': form_bill
-                })
         else:
             form_resident = forms.AddResidentToApartmentForm()
             form_bill = forms.BillForm()

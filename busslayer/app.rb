@@ -28,11 +28,11 @@ class SimpleApp < Sinatra::Base
   enable :sessions
 
   register Sinatra::ActiveRecordExtension
-  register Sinatra::Routing::Bills
   register Sinatra::Routing::Users
   register Sinatra::Routing::Apartments
+  register Sinatra::Routing::Bills
   register Sinatra::Routing::Misc
-  
+
 
   if ENV['RACK_ENV'] == 'development'
     Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }

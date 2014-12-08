@@ -13,11 +13,15 @@
 #
 
 class Bill < ActiveRecord::Base
-  belongs_to :owner, class_name: "User", foreign_key: 'user_id'
+  has_many :users_bills
+  has_many :users, :through => :users_bills
+
+  belongs_to :user
   belongs_to :apartment
+  belongs_to :owner, class_name: "User", foreign_key: 'user_id'
 
   validates :name, presence: true
-  validates :value, presence: true, 
+  validates :value, presence: true,
         format: { with: /^.*\.\d{0,2}$/, multiline: true, message: 'value can have only 2 decimal places'}
   validates :apartment, presence: true
   validates :owner, presence: true
