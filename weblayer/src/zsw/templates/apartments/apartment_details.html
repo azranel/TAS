@@ -62,11 +62,12 @@
                                     {% if debtor.bill_id == bill.id  %}
                                         {% if debtor.users %}
                                             {% for user in debtor.users %}
-                                                <a href="/user/{{ user.id }}">{{ user.firstname }}</a>,
+                                                <a href="/user/{{ user.id }}">{{ user.firstname }}</a> <a data-method="POST" href="/bills/{{ bill.id }}/deletedebtor/{{ user.id }}" rel="nofollow">X</a>,
                                             {% endfor %}
                                         {% else %}
                                             Nikt
                                         {% endif %}
+                                        +
                                     {% endif %}
                                 {% endfor %}
                             </td>

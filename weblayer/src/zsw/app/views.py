@@ -274,7 +274,22 @@ def add_resident(request, form_resident, status, apartment_id):
     })
 
 
+def delete_user_from_bill(request, bill_id, debtor_id):
+    """ Send request to remove debtor from the bill. """
+    content = request_server(
+        "bills/" + str(bill_id) + "/deletedebtor",
+        "POST",
+        "debtor_id=" + str(debtor_id)
+    )
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
+
+    return response
+
+
 def add_users_to_bill(request, status, bill_id, debtors):
+    """ Send request to add debtor to the bill. """
     list_of_debtors = [debtor['id'] for debtor in debtors]
 
     for debtor in list_of_debtors:

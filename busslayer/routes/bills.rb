@@ -7,6 +7,7 @@ module Sinatra
         update(app)
         delete(app)
         add_debtor(app)
+        delete_debtor(app)
       end
 
       def self.fetch(app)
@@ -72,6 +73,19 @@ module Sinatra
           bill.users << debtor
           bill.save
           { status: 200 }.to_json
+        end
+      end
+
+      def self.delete_debtor(app)
+        app.post '/bills/:id/deletedebtor' do
+          content_type :json
+          bill = Bill.find_by_id(params[:id])
+          if bill
+            { status: 404, apartment_id: bill.apartment_id }.to_json
+            { status: 200, apartment_id: bill.apartment_id }.to_json if bill.users.delete(bill.users.find_by_id(params[:debtor_id]))
+          else
+            { status: 404, apartment_id: bill.apartment_id }.to_json
+          end
         end
       end
     end
