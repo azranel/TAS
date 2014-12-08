@@ -40,6 +40,17 @@
         <script type="text/javascript" src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/nav.js' %}"></script>
+        <div class="list_of_apartments">
+            {% for apartment in login_data.bills %}
+                <a href="/apartments/{{ apartment.0 }}">
+                    <div class="apartment-block">
+                        {{ apartment.1.name }}<br />
+                        {{ apartment.1.value }}
+                    </div>
+                    <br />
+                </a>
+            {% endfor %}
+        </div>
         <div class="container">
             {% block content %}{% endblock %}
         </div>

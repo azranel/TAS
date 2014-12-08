@@ -18,8 +18,10 @@ def check_session():
             if 'key' in request.COOKIES:
                 session_key = request.COOKIES['key']
                 s = SessionStore(session_key=session_key)
+                user_data = fetch(s['user_id'])
                 status = {'id': s['user_id'],
-                          'login': s['login']}
+                          'login': s['login'],
+                          'bills': user_data['list_of_apartments']}
             else:
                 status = {}
             if len(callback_kwargs):

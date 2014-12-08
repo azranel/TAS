@@ -5,6 +5,7 @@ module Sinatra
         register(app)
         login(app)
         fetch(app)
+        bills(app)
       end
 
       def self.register(app)
@@ -18,6 +19,7 @@ module Sinatra
           end
         end
       end
+
       def self.login(app)
         app.post "/users/login" do
           content_type :json
@@ -34,6 +36,7 @@ module Sinatra
           end
         end
       end
+
       def self.fetch(app)
         app.get  '/users/:id' do
           content_type :json
@@ -41,10 +44,41 @@ module Sinatra
           if u
             hash = u.fetch_hash
             hash['owned'] = Apartment.where(user_id: u.id)
+
+            hash['list_of_apartments'] = {}
+            hash['apartments_info'] = []
+            hash['apartments_ids'] = []
+            u.bills.each do |bill|
+              user_data = {
+                'apartment_id' => bill.apartment_id,
+                'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
+                'value' => bill.divide,
+              }
+              hash['apartments_info'] << user_data
+              hash['apartments_ids'] << bill.apartment_id
+            end
+            hash['apartments_info'].each do |apartment|
+              if hash['list_of_apartments'][apartment['apartment_id']].nil?
+                hash['list_of_apartments'][apartment['apartment_id']] = {
+                  'value' => apartment['value'],
+                  'name' => apartment['apartment_name'],
+                }
+              else
+                hash['list_of_apartments'][apartment['apartment_id']]['value'] += apartment['value']
+              end
+            end
+            hash['list_of_apartments'] = hash['list_of_apartments'].to_a
             hash.to_json
           else
             { status: 404 }.to_json
           end
+        end
+      end
+
+      def self.bills(app)
+        app.get '/users/:id/bills' do
+          bills = User.find_by_id(params[:id]).bills
+          bills.to_json
         end
       end
     end

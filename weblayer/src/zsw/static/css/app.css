@@ -96,3 +96,10 @@ body {
 .hidden {
     display: none;
 }
+.list_of_apartments {
+    float: left;
+}
+.apartment-block {
+    padding: 20px;
+    background-color: #f7f7f7;
+}
