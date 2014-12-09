@@ -49,24 +49,41 @@ module Sinatra
             hash['apartments_info'] = []
             hash['apartments_ids'] = []
             u.bills.each do |bill|
+              hash['apartments_ids'] << bill.apartment_id unless hash['apartments_ids'].include?(bill.apartment_id)
               if bill.user_id != u.id
                 user_data = {
                   'apartment_id' => bill.apartment_id,
                   'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
                   'value' => bill.divide,
+                  'lend_value' => 0,
                 }
-                hash['apartments_info'] << user_data
-                hash['apartments_ids'] << bill.apartment_id
+              elsif bill.users.find_by_id(u.id)
+                user_data = {
+                  'apartment_id' => bill.apartment_id,
+                  'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
+                  'value' => 0,
+                  'lend_value' => bill.value - bill.divide,
+                }
+              else
+                user_data = {
+                  'apartment_id' => bill.apartment_id,
+                  'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
+                  'value' => 0,
+                  'lend_value' => bill.value,
+                }
               end
+              hash['apartments_info'] << user_data
             end
             hash['apartments_info'].each do |apartment|
               if hash['list_of_apartments'][apartment['apartment_id']].nil?
                 hash['list_of_apartments'][apartment['apartment_id']] = {
                   'value' => apartment['value'],
+                  'lend_value' => apartment['lend_value'],
                   'name' => apartment['apartment_name'],
                 }
               else
                 hash['list_of_apartments'][apartment['apartment_id']]['value'] += apartment['value']
+                hash['list_of_apartments'][apartment['apartment_id']]['lend_value'] += apartment['lend_value']
               end
             end
             hash['list_of_apartments'] = hash['list_of_apartments'].to_a

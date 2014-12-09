@@ -64,15 +64,18 @@ def login(request, status):
             content = request_server("users/login", "POST", body)
 
             if content['status'] == 200:
+                user_data = fetch(content['id'])
                 s = SessionStore()
                 s['user_id'] = content['id']
                 s['login'] = form_dict['login']
+                s['bills'] = user_data['list_of_apartments']
                 s.save()
                 key = s.session_key
 
                 login_data = {
                     'id': content['id'],
                     'login': form_dict['login'],
+                    'bills': user_data['list_of_apartments'],
                 }
 
                 response = render(request, 'user/signin.html', {
