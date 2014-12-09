@@ -370,8 +370,7 @@ def add_resident(request, form_resident, status, apartment_id):
     form_dict = {
         'email': form_resident.cleaned_data['email'],
     }
-    body = "user_id=" + str(status['id']) + \
-        "&email=" + form_dict['email']
+    body = "email=" + form_dict['email']
     request_server(
         "apartments/" + apartment_id + "/addresident",
         "POST",

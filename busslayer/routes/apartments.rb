@@ -91,26 +91,19 @@ module Sinatra
       def self.add_resident(app)
         app.post '/apartments/:id/addresident' do
           content_type :json
-          resident = User.find_by_id(params[:user_id])
+          resident = User.find_by_email(params[:email])
           apartment = Apartment.find_by_id(params[:id])
-          user = User.find_by_email(params[:email])
-          if user
-            apartment.users << user
-            apartment.save
-            { status: 200 }.to_json
+          if !apartment.have_user?(resident)
+            if resident
+              apartment.users << resident
+              apartment.save
+              { status: 200 }.to_json
+            else
+              { status: 404 }.to_json
+            end
           else
-            { status: 404 }.to_json
+            { status: 403 }.to_json
           end
-          # if apartment.have_user?(resident)
-          #   user = User.find_by_email(params[:email])
-          #   if user
-          #     apartment.users << user
-          #     apartment.save
-          #     { status: 200 }.to_json
-          #   else
-          #     { status: 404 }.to_json
-          #   end
-          # end
         end
       end
     end
