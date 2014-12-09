@@ -200,6 +200,123 @@ def signout(request):
     return response
 
 
+### BILLS
+def fetch_bill(bill_id):
+    """
+    Fetch bill data by id from server.
+    Return dict.
+    """
+    return request_server("bills/" + str(bill_id), "GET", "")
+
+
+def delete_user_from_bill(request, bill_id, debtor_id):
+    """ Send request to remove debtor from the bill. """
+    content = request_server(
+        "bills/" + str(bill_id) + "/deletedebtor",
+        "POST",
+        "debtor_id=" + str(debtor_id)
+    )
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
+
+    return response
+
+
+def add_user_to_bill(request, bill_id, debtor_ids):
+    """ Send request to add debtor to the bill. """
+    body = "user_ids_list=" + debtor_ids
+
+    content = request_server(
+        "bills/" + str(bill_id) + "/adddebtors",
+        "POST",
+        body
+    )
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
+
+    return response
+
+
+def add_users_list_to_bill(request, bill_id, debtors):
+    """ Send request to add list of debtors to the bill. """
+    list_of_debtors = [str(debtor['id']) for debtor in debtors]
+    return add_user_to_bill(request, bill_id, ",".join(list_of_debtors))
+
+
+def add_bill(request, status, form_bill, apartment_id):
+    """ Send request to add bill. """
+    form_dict = {
+        'name': form_bill.cleaned_data['name'],
+        'description': form_bill.cleaned_data['description'],
+        'value': str(form_bill.cleaned_data['value']),
+    }
+
+    body = "bill[user_id]=" + str(status['id']) + \
+        "&bill[name]=" + form_dict['name'] + \
+        "&bill[description]=" + form_dict['description'] + \
+        "&bill[value]=" + form_dict['value'] + \
+        "&bill[apartment_id]=" + apartment_id
+    content = request_server("bills/create", "POST", body)
+
+    apartment = fetch_apartment(apartment_id)
+
+    return add_users_list_to_bill(
+        request,
+        content['id'],
+        apartment['residents']
+    )
+
+
+def delete_bill(request, bill_id):
+    """ Delete bill by id from the server database. """
+    content = request_server("bills/" + str(bill_id), "DELETE", "")
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
+
+    return response
+
+
+@check_session()
+def edit_bill(request, status, bill_id):
+    """ View of bill edit form. """
+    if request.method == 'POST':
+        form = forms.BillForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'name': form.cleaned_data['name'],
+                'value': form.cleaned_data['value'],
+                'description': form.cleaned_data['description']
+            }
+
+            body = "bill[name]=" + form_dict['name'] + \
+                   "&bill[description]=" + form_dict['description'] + \
+                   "&bill[value]=" + str(form_dict['value'])
+            content = request_server(
+                "bills/" + bill_id + "/edit",
+                "POST",
+                body
+            )
+            response = HttpResponseRedirect(
+                '/apartments/' + str(content['apartment_id'])
+            )
+
+    else:
+        bill_info = fetch_bill(bill_id)
+        form = forms.BillForm({
+            'name': bill_info['name'],
+            'value': bill_info['value'],
+            'description': bill_info.get('description')})
+        response = render(request, 'bills/edit_bill.html', {
+                          'form': form,
+                          'login_data': status,
+                          })
+
+    return response
+
+
 ### APARTMENTS
 def fetch_apartment(apartment_id):
     """
@@ -207,14 +324,6 @@ def fetch_apartment(apartment_id):
     Return dict.
     """
     return request_server("apartments/" + str(apartment_id), "GET", "")
-
-
-def fetch_bill(bill_id):
-    """
-    Fetch bill data by id from server.
-    Return dict.
-    """
-    return request_server("bills/" + str(bill_id), "GET", "")
 
 
 def delete_apartment(request, apartment_id):
@@ -279,66 +388,6 @@ def add_resident(request, form_resident, status, apartment_id):
     })
 
 
-def delete_user_from_bill(request, bill_id, debtor_id):
-    """ Send request to remove debtor from the bill. """
-    content = request_server(
-        "bills/" + str(bill_id) + "/deletedebtor",
-        "POST",
-        "debtor_id=" + str(debtor_id)
-    )
-    response = HttpResponseRedirect(
-        '/apartments/' + str(content['apartment_id'])
-    )
-
-    return response
-
-
-def add_user_to_bill(request, bill_id, debtor_ids):
-    """ Send request to add debtor to the bill. """
-    body = "user_ids_list=" + debtor_ids
-
-    content = request_server(
-        "bills/" + str(bill_id) + "/adddebtors",
-        "POST",
-        body
-    )
-    response = HttpResponseRedirect(
-        '/apartments/' + str(content['apartment_id'])
-    )
-
-    return response
-
-
-def add_users_list_to_bill(request, bill_id, debtors):
-    """ Send request to add list of debtors to the bill. """
-    list_of_debtors = [str(debtor['id']) for debtor in debtors]
-    return add_user_to_bill(request, bill_id, ",".join(list_of_debtors))
-
-
-def add_bill(request, status, form_bill, apartment_id):
-    """ Send request to add bill. """
-    form_dict = {
-        'name': form_bill.cleaned_data['name'],
-        'description': form_bill.cleaned_data['description'],
-        'value': str(form_bill.cleaned_data['value']),
-    }
-
-    body = "bill[user_id]=" + str(status['id']) + \
-        "&bill[name]=" + form_dict['name'] + \
-        "&bill[description]=" + form_dict['description'] + \
-        "&bill[value]=" + form_dict['value'] + \
-        "&bill[apartment_id]=" + apartment_id
-    content = request_server("bills/create", "POST", body)
-
-    apartment = fetch_apartment(apartment_id)
-
-    return add_users_list_to_bill(
-        request,
-        content['id'],
-        apartment['residents']
-    )
-
-
 @check_session()
 def apartment_details(request, status, apartment_id):
     """ View of apartment details. """
@@ -376,54 +425,6 @@ def apartment_details(request, status, apartment_id):
                           'form_resident': form_resident,
                           'form_bill': form_bill
                           })
-    return response
-
-
-def delete_bill(request, bill_id):
-    """ Delete bill by id from the server database. """
-    content = request_server("bills/" + str(bill_id), "DELETE", "")
-    response = HttpResponseRedirect(
-        '/apartments/' + str(content['apartment_id'])
-    )
-
-    return response
-
-
-@check_session()
-def edit_bill(request, status, bill_id):
-    """ View of bill edit form. """
-    if request.method == 'POST':
-        form = forms.BillForm(request.POST)
-        if form.is_valid():
-            form_dict = {
-                'name': form.cleaned_data['name'],
-                'value': form.cleaned_data['value'],
-                'description': form.cleaned_data['description']
-            }
-
-            body = "bill[name]=" + form_dict['name'] + \
-                   "&bill[description]=" + form_dict['description'] + \
-                   "&bill[value]=" + str(form_dict['value'])
-            content = request_server(
-                "bills/" + bill_id + "/edit",
-                "POST",
-                body
-            )
-            response = HttpResponseRedirect(
-                '/apartments/' + str(content['apartment_id'])
-            )
-
-    else:
-        bill_info = fetch_bill(bill_id)
-        form = forms.BillForm({
-            'name': bill_info['name'],
-            'value': bill_info['value'],
-            'description': bill_info.get('description')})
-        response = render(request, 'bills/edit_bill.html', {
-                          'form': form,
-                          'login_data': status,
-                          })
-
     return response
 
 
