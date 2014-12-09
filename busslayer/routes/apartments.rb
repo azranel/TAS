@@ -93,7 +93,7 @@ module Sinatra
           content_type :json
           resident = User.find_by_email(params[:email])
           apartment = Apartment.find_by_id(params[:id])
-          if !apartment.have_user?(resident)
+          if !apartment.have_user?(resident) || apartment.user_id == resident.id
             if resident
               apartment.users << resident
               apartment.save
