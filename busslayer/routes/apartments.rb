@@ -33,8 +33,8 @@ module Sinatra
           end
           if a
             hash = { status: 200, id: a.id, name: a.name, address: a.address, city: a.city,
-             description: a.description, owner: a.user, residents: a.users, bills: a.bills,
-             user_bills_list: user_bills_list, residents_count: a.users.count }.to_json(methods: :divide)
+                     description: a.description, owner: a.user, residents: a.users, bills: a.bills,
+                     user_bills_list: user_bills_list, residents_count: a.users.count }.to_json(methods: :divide)
           else
             { status: 404 }.to_json
           end
@@ -91,18 +91,21 @@ module Sinatra
       def self.add_resident(app)
         app.post '/apartments/:id/addresident' do
           content_type :json
-          resident = User.find_by_email(params[:email])
+          adder = User.find_by_id(params[:adder_id])
           apartment = Apartment.find_by_id(params[:id])
-          if !apartment.have_user?(resident) || apartment.user_id == resident.id
-            if resident
-              apartment.users << resident
-              apartment.save
-              { status: 200 }.to_json
+          if apartment.have_owner_or_resident?(adder)
+            resident = User.find_by_email(params[:email])
+            unless apartment.have_resident?(resident)
+              if resident
+                apartment.users << resident
+                apartment.save
+                { status: 200 }.to_json
+              else
+                { status: 404 }.to_json
+              end
             else
-              { status: 404 }.to_json
+              { status: 403 }.to_json
             end
-          else
-            { status: 403 }.to_json
           end
         end
       end

@@ -364,13 +364,13 @@ def apartments(request, status):
                   'list_of_resident_apartments': resident_apartments,
                   })
 
-
 def add_resident(request, form_resident, status, apartment_id):
     """ Send request to add resident. """
     form_dict = {
         'email': form_resident.cleaned_data['email'],
     }
-    body = "email=" + form_dict['email']
+    body = "email=" + form_dict['email'] + \
+        "&adder_id=" + str(status['id'])
     request_server(
         "apartments/" + apartment_id + "/addresident",
         "POST",

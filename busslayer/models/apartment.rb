@@ -23,7 +23,15 @@ class Apartment < ActiveRecord::Base
   validates :name, presence: true
   validates :city, presence: true
 
-  def have_user?(user)
-    self.user == user || self.users.include?(user)
+  def have_resident?(user)
+    self.users.include?(user)
+  end
+
+  def have_owner?(user)
+    self.user == user
+  end
+
+  def have_owner_or_resident?(user)
+    self.have_resident?(user) || self.have_owner?(user)
   end
 end
