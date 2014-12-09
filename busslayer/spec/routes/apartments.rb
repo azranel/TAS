@@ -10,7 +10,7 @@ describe "Apartments routes" do
   describe "GET /apartments/:id" do
     context "if not found" do
       it "returns 404 if apartment is not found" do
-        response = get 'apartments/-1'
+        response = get "apartments/-1"
         expect(response.body).to include({ status: 404 }.to_json)
       end
     end
