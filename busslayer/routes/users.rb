@@ -57,7 +57,11 @@ module Sinatra
                   'value' => bill.divide,
                   'lend_value' => 0,
                 }
-              elsif bill.users.find_by_id(u.id)
+                hash['apartments_info'] << user_data
+              end
+            end
+            Bill.where(:user_id => u.id).each do |bill|
+              if bill.users.find_by_id(u.id)
                 user_data = {
                   'apartment_id' => bill.apartment_id,
                   'apartment_name' => Apartment.all.find_by_id(bill.apartment_id).name,
