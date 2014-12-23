@@ -1,5 +1,6 @@
 module Sinatra
   module Routing
+    # Contains HTTP paths for bills
     module Bills
       def self.registered(app)
         fetch(app)
@@ -12,7 +13,7 @@ module Sinatra
       end
 
       def self.fetch(app)
-        app.get "/bills/:id" do
+        app.get '/bills/:id' do
           content_type :json
           bill = Bill.find_by_id(params[:id])
           if bill

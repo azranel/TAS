@@ -1,29 +1,29 @@
 #!/usr/bin/env ruby
 
 require 'sinatra/base'
-require "sinatra/activerecord"
-require "i18n"
-require "json"
+require 'sinatra/activerecord'
+require 'i18n'
+require 'json'
 require 'drb'
 require 'thread'
 
-#Used for loading models into the application
-Dir["./models/*.rb"].each { |file| require file }
+# Used for loading models into the application
+Dir['./models/*.rb'].each { |file| require file }
 
 I18n.config.enforce_available_locales = false
 
-#Used for loading routes
-Dir["./routes/*.rb"].each { |file| require file }
+# Used for loading routes
+Dir['./routes/*.rb'].each { |file| require file }
 
-require "./rmiserv"
+require './rmiserv'
 ENV['RACK_ENV'] ||= 'development'
 RMI_URL = 'druby://0.0.0.0:9000'
 $SITE = 1
 
+# Represents sinatra app (which is business layer)
 class SimpleApp < Sinatra::Base
-
   set :root, File.dirname(__FILE__)
-  set :database_file, "./db/database.yml"
+  set :database_file, './db/database.yml'
 
   enable :sessions
 
@@ -33,11 +33,10 @@ class SimpleApp < Sinatra::Base
   register Sinatra::Routing::Bills
   register Sinatra::Routing::Misc
 
-
   if ENV['RACK_ENV'] == 'development'
     Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
     puts "RMIServer running at #{ RMI_URL }"
   end
 
-  run! if app_file == $0
+  run! if app_file == $PROGRAM_NAME
 end
