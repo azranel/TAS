@@ -32,6 +32,7 @@ class SimpleApp < Sinatra::Base
   register Sinatra::Routing::Apartments
   register Sinatra::Routing::Bills
   register Sinatra::Routing::Misc
+  register Sinatra::Routing::Messages
 
   if ENV['RACK_ENV'] == 'development'
     Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }

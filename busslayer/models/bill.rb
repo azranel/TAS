@@ -4,14 +4,14 @@
 #
 #  id           :integer          not null, primary key
 #  name         :string(255)
-#  description  :string(255)
+#  description  :text
 #  value        :float
 #  apartment_id :integer
 #  user_id      :integer
 #  created_at   :datetime
 #  updated_at   :datetime
 #
-# Represents apartment bills in database
+
 class Bill < ActiveRecord::Base
   has_many :users_bills
   has_many :users, through: :users_bills

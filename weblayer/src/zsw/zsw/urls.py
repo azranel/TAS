@@ -31,4 +31,8 @@ urlpatterns = patterns('',
         name='delete_bill'),
     url(r'^bills/edit/(?P<bill_id>[0-9]*)', views.edit_bill,
         name='edit_bill'),
+    url(r'^message/(?P<message_id>[0-9]*)/delete', views.delete_message,
+        name='delete_message'),
+    url(r'^message/(?P<message_id>[0-9]*)/edit', views.edit_message,
+        name='edit_message'),
 )

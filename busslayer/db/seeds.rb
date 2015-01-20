@@ -16,6 +16,11 @@ bills = [
   { name: 'Garnki', description: 'czerwony', value: '44.99', apartment_id: 1, user_id: 2 },
 ]
 
+message = [
+  { subject: 'dzwonila właścicielka', content: 'Przyszedł rachunek za prąd. Do zapłaty do kwietnia.', user_id: 2, apartment_id: 1  },
+]
+
+
 users.each do |user|
   User.create(user)
 end
@@ -30,4 +35,8 @@ end
 
 bills.each do |bill|
   Bill.create(bill)
+end
+
+message.each do |message|
+  Message.create(message)
 end

@@ -15,6 +15,7 @@ module Sinatra
           content_type :json
           a = Apartment.find_by_id(params[:id])
           if a
+            messages = a.messages
             user_bills_list = []
             a.bills.each do |bill|
               bill_hash = {}
@@ -35,7 +36,8 @@ module Sinatra
 
             hash = { status: 200, id: a.id, name: a.name, address: a.address, city: a.city,
                      description: a.description, owner: a.user, residents: a.users, bills: a.bills,
-                     user_bills_list: user_bills_list, residents_count: a.users.count }.to_json(methods: :divide)
+                     user_bills_list: user_bills_list, residents_count: a.users.count,
+                     messages: messages }.to_json(methods: :divide)
           else
             { status: 404 }.to_json
           end

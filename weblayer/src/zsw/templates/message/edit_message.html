@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+        {% if login_data.id %}
+            <h2>Aktualizuj wiadomość</h2>
+            <div>
+                <form class="form-signin" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                    </p>
+                </form>
+            </div>
+        {% else %}
+            <div>Zaloguj sie aby edytować.</div>
+        {% endif %}
+
+{% endblock %}

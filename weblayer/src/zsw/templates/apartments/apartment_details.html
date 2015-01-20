@@ -39,6 +39,20 @@
                     </tr>
                 </table>
                 <br/>
+
+                <p> Wiadomości: </p>
+                    <!--{{apartment.messages}}-->
+                    <!--Temat: {{apartment.messages.subject}} <br>-->
+                    <!--Treśćt: {{apartment.messages.content}}<br>-->
+                    {% for message in apartment.messages %}
+                        Temat: {{ message.subject }}
+                        <a data-method="delete" href="/message/{{ message.id }}/delete" rel="nofollow">Usuń</a>
+                        <a data-method="update" href="/message/{{ message.id }}/edit" rel="nofollow">Edytuj</a><br/>
+                        Treść: {{ message.content }}<br/>
+                        ---<br/><br>
+                    {% endfor %}
+
+                <br><br>
                 <p>Rachunki: </p>
                 <table class="table table-hover">
                     <tr>
@@ -116,6 +130,18 @@
                             </div>
                         </form>
                     </div>
+
+                    <div class="col-md-offset-3 col-md-5">
+                        <h4>Dodaj wiadomość:</h4>
+                        <form method="post" class="form-horizontal">
+                            {% csrf_token %}
+                            {{ form_message }}
+                            <div class="form-group">
+                            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             {% endif %}
         {% else %}

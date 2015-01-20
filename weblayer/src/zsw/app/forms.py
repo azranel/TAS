@@ -94,3 +94,16 @@ class BillForm(forms.Form):
                                    'placeholder': 'Value',
                                    'class': 'form-control form-group',
                                    'required': ''}))
+
+class MessageForm(forms.Form):
+    subject = forms.CharField(label='',
+                              widget=forms.TextInput(attrs={
+                                    'placeholder': 'Subject',
+                                    'class': 'form-control',
+                                    'required': ''}))
+    content = forms.CharField(label='',
+                              widget=forms.TextInput(attrs={
+                                    'placeholder': 'Content',
+                                    'class': 'form-control',
+                                    'required': ''}))
+

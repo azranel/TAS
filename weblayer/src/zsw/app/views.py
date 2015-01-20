@@ -258,6 +258,7 @@ def add_bill(request, status, form_bill, apartment_id):
         "&bill[description]=" + form_dict['description'] + \
         "&bill[value]=" + form_dict['value'] + \
         "&bill[apartment_id]=" + apartment_id
+
     content = request_server("bills/create", "POST", body)
 
     apartment = fetch_apartment(apartment_id)
@@ -267,6 +268,7 @@ def add_bill(request, status, form_bill, apartment_id):
         content['id'],
         apartment['residents']
     )
+
 
 
 def delete_bill(request, bill_id):
@@ -393,6 +395,7 @@ def apartment_details(request, status, apartment_id):
     if request.method == 'POST':
         form_resident = forms.AddResidentToApartmentForm(request.POST)
         form_bill = forms.BillForm(request.POST)
+        form_message = forms.MessageForm(request.POST)
         if form_resident.is_valid():
             response = add_resident(
                 request,
@@ -404,25 +407,32 @@ def apartment_details(request, status, apartment_id):
         elif form_bill.is_valid():
             response = add_bill(request, status, form_bill, apartment_id)
 
+        elif form_message.is_valid():
+            response = add_message(request, status, form_message, apartment_id)
+
         else:
             form_resident = forms.AddResidentToApartmentForm()
             form_bill = forms.BillForm()
+            form_message = forms.MessageForm()
             apartment = fetch_apartment(apartment_id)
             response = render(request, 'apartments/apartment_details.html', {
                               'login_data': status,
                               'apartment': apartment,
                               'form_resident': form_resident,
-                              'form_bill': form_bill
+                              'form_bill': form_bill,
+                              'form_message': form_message
                               })
     else:
         form_resident = forms.AddResidentToApartmentForm()
         form_bill = forms.BillForm()
+        form_message = forms.MessageForm()
         apartment = fetch_apartment(apartment_id)
         response = render(request, 'apartments/apartment_details.html', {
                           'login_data': status,
                           'apartment': apartment,
                           'form_resident': form_resident,
-                          'form_bill': form_bill
+                          'form_bill': form_bill,
+                          'form_message': form_message,
                           })
     return response
 
@@ -512,6 +522,83 @@ def create_apartment(request, status):
                           'form': form,
                           'login_data': status,
                           })
+    return response
+
+### Message
+def fetch_message(message_id):
+    """
+    Fetch message data by id from server.
+    Return dict.
+    """
+    return request_server("message/" + str(message_id), "GET", "")
+
+
+
+def add_message(request, status, form_message, apartment_id):
+
+            form_dict = {
+                'subject': form_message.cleaned_data['subject'],
+                'content': form_message.cleaned_data['content'],
+            }
+
+            body = "message[user_id]=" + str(status['id']) + \
+                "&message[subject]=" + form_dict['subject'] + \
+                "&message[content]=" + form_dict['content'] + \
+                "&message[apartment_id]=" + str(apartment_id)
+
+
+            content = request_server("message/create", "POST", body)
+
+            apartment = fetch_apartment(apartment_id)
+
+            response = HttpResponseRedirect(
+                 '/apartments/' + str(apartment_id)
+                )
+
+            return response
+
+
+
+@check_session()
+def edit_message(request, status, message_id):
+    if request.method == 'POST':
+        form = forms.MessageForm(request.POST)
+        if form.is_valid():
+            form_dict = {
+                'subject': form.cleaned_data['subject'],
+                'content': form.cleaned_data['content'],
+            }
+
+            body = "message[subject]=" + form_dict['subject'] + \
+                   "&message[content]=" + form_dict['content']
+
+            content = request_server(
+                "message/" + message_id + "/edit",
+                "POST",
+                body
+            )
+            response = HttpResponseRedirect(
+                '/apartments/' + str(content['apartment_id'])
+            )
+
+    else:
+        message_info = fetch_message(message_id)
+        form = forms.MessageForm({
+            'subject': message_info['subject'],
+            'content': message_info['content'],
+            })
+        response = render(request, 'message/edit_message.html', {
+                          'form': form,
+                          'login_data': status,
+                          })
+
+    return response
+
+def delete_message(request, message_id):
+    content = request_server("message/" + str(message_id) + "/delete", "DELETE", "")
+    response = HttpResponseRedirect(
+        '/apartments/' + str(content['apartment_id'])
+    )
     return response
 
 
