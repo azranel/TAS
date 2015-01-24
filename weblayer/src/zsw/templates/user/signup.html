@@ -2,21 +2,21 @@
 {% block content %}
     {% if login_data.id %}
         <br /><br /><br />
-        <center><div>Account created successfully!</div></center>
+        <center><div>Konto założone poprawnie!</div></center>
     {% elif email_in_use %}
         <center>
-            <div>Email address already in use!</div>
+            <div>Podany adres email już istnieje w naszej bazie!</div>
             <a href="/signin">Try to log in.</a><span class="clearfix"></span>
         </center>
     {% else %}
         <div class="row">
             <div class="col-sm-6 col-md-4 col-md-offset-4">
-                <h1 class="text-center login-title">It’s free and always will be.</h1>
+                <h1 class="text-center login-title">Rejestracja jest darmowa i zawsze taka będzie!</h1>
                 <div class="account-wall">
                     <form class="form-signin" action="/signup/" method="post">{% csrf_token %}
                         {{ form }}
                         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Zarejestruj" />
-                        <a href="/signin" class="pull-right new-account">Already Registered?</a><span class="clearfix"></span>
+                        <a href="/signin" class="pull-right new-account">Już posiadasz konto?</a><span class="clearfix"></span>
                     </form>
                 </div>
             </div>
