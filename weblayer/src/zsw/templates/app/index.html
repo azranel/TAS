@@ -2,16 +2,17 @@
 {% block content %}
     {% if login_data.id %}
         <br /><br /><br />
-        <center><div>Hello logged user!</div></center>
+        <center><div>Witaj! Udało Ci się poprawnie zalogować.</div></center>
     {% elif login_data.signout %}
-        <center><div>Successfully logged out!</div></center>
+        <center><div>Poprawnie wylogowano!</div></center>
     {% else %}
         <center>
-           <h1>Home</h1>
-           This is coolest app in the world!<br />
-           Sign in for free today!<br />
-           It will take just few seconds.<br />
-           <a href="signin">Click here</a>
+           <h1> Aplikacja do zarządzania sprawami współlokatorskimi </h1>
+           Jeżeli szukasz rozwiązania na wiele współlokatorskich problemów to dobrze trafiłeś!<br/>
+           Jest to w pełni darmowa aplikacja, a sama rejestracja trwa zaledwie kilka sekund!<br/>
+           Jeżeli wynajmujesz od kogoś lub komuś mieszkanie to poświęć kilka sekund na zapoznanie z naszą aplikacją.<br/>
+           Gwarantujemy, że nie będzie to zmarnowany czas!<br/>
+           <a href="signin">Aby zacząć kliknij tutaj!</a>
        </center>
     {% endif %}
 {% endblock %}
