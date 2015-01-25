@@ -15,10 +15,15 @@ I18n.config.enforce_available_locales = false
 # Used for loading routes
 Dir['./routes/*.rb'].each { |file| require file }
 
-require './rmiserv'
-ENV['RACK_ENV'] ||= 'development'
-RMI_URL = 'druby://0.0.0.0:9000'
-$SITE = 1
+# Loading protobufs
+Dir['./lib/**/*.rb'].each { |file| require file }
+
+# Loading services
+Dir['./services/**/*.rb'].each { |file| require file }
+
+# ENV['RACK_ENV'] ||= 'development'
+# RMI_URL = 'druby://0.0.0.0:9000'
+# $SITE = 1
 
 # Represents sinatra app (which is business layer)
 class SimpleApp < Sinatra::Base
@@ -34,10 +39,8 @@ class SimpleApp < Sinatra::Base
   register Sinatra::Routing::Misc
   register Sinatra::Routing::Messages
 
-  if ENV['RACK_ENV'] == 'development'
-    Thread.new { DRb.start_service(RMI_URL, RMIServer.new) }
-    puts "RMIServer running at #{ RMI_URL }"
-  end
+  # TODO: Running RPC Server to handle RPC Protobuf requests
+  %x( rpc_server  )
 
   run! if app_file == $PROGRAM_NAME
 end

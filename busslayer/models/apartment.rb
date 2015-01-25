@@ -35,4 +35,24 @@ class Apartment < ActiveRecord::Base
   def have_owner_or_resident?(user)
     self.have_resident?(user) || self.have_owner?(user)
   end
+
+  def tenants_count
+    users.count
+  end
+
+  def self.all_tenants_count
+    count = 0
+    Apartment.all.each do |a|
+      count += a.users.count
+    end
+    count
+  end
+
+  def bills_value
+    sum = 0
+    Apartment.find_by_id(id).bills.select("sum(value) as bills_value").each do |x|
+      sum += x
+    end
+    sum
+  end
 end
