@@ -10,7 +10,7 @@ class SignInForm(forms.Form):
                                               'autofocus': ''}))
     password = forms.CharField(label='',
                                      widget=forms.PasswordInput(attrs={
-                                         'placeholder': 'Password',
+                                         'placeholder': 'Haslo',
                                          'class': 'form-control',
                                          'required': ''}))
 
@@ -18,18 +18,18 @@ class SignInForm(forms.Form):
 class SignUpForm(forms.Form):
     name = forms.CharField(label='',
                                  widget=forms.TextInput(
-                                     attrs={'placeholder': 'Name',
+                                     attrs={'placeholder': 'Imie',
                                             'class': 'form-control',
                                             'required': '',
                                             'autofocus': ''}))
     surname = forms.CharField(label='',
                                     widget=forms.TextInput(
-                                        attrs={'placeholder': 'Surname',
+                                        attrs={'placeholder': 'Nazwisko',
                                                'class': 'form-control',
                                                'required': ''}))
     phone = forms.CharField(label='',
                                   widget=forms.TextInput(
-                                      attrs={'placeholder': 'Phone',
+                                      attrs={'placeholder': 'Telefon',
                                              'class': 'form-control',
                                              'required': ''}))
     email = forms.EmailField(label='',
@@ -40,7 +40,7 @@ class SignUpForm(forms.Form):
     password = forms.CharField(label='',
                                      widget=forms.PasswordInput(
                                          attrs={
-                                             'placeholder': 'Password',
+                                             'placeholder': 'Haslo',
                                              'class': 'form-control',
                                              'required': ''}))
 
@@ -48,22 +48,22 @@ class SignUpForm(forms.Form):
 class ApartmentForm(forms.Form):
     name = forms.CharField(label='',
                                  widget=forms.TextInput(
-                                     attrs={'placeholder': 'Name',
+                                     attrs={'placeholder': 'Imie',
                                             'class': 'form-control',
                                             'required': ''}))
     address = forms.CharField(label='',
                                     widget=forms.TextInput(
-                                        attrs={'placeholder': 'Address',
+                                        attrs={'placeholder': 'Adres',
                                                'class': 'form-control',
                                                'required': ''}))
     city = forms.CharField(label='',
                                  widget=forms.TextInput(
-                                     attrs={'placeholder': 'City',
+                                     attrs={'placeholder': 'Miasto',
                                             'class': 'form-control',
                                             'required': ''}))
     description = forms.CharField(label='',
                                         widget=forms.TextInput(attrs={
-                                            'placeholder': 'Description',
+                                            'placeholder': 'Opis',
                                             'class': 'form-control',
                                             'required': ''}))
 
@@ -79,31 +79,31 @@ class AddResidentToApartmentForm(forms.Form):
 class BillForm(forms.Form):
     name = forms.CharField(label='',
                            widget=forms.TextInput(attrs={
-                               'placeholder': 'Name',
+                               'placeholder': 'Nazwa',
                                'class': 'form-control form-group',
                                'required': ''}))
     description = forms.CharField(label='',
                                   widget=forms.TextInput(attrs={
-                                      'placeholder': 'Description',
+                                      'placeholder': 'Opis',
                                       'class': 'form-control form-group',
                                       'required': ''}))
     value = forms.DecimalField(label='',
                                max_digits=19,
                                decimal_places=2,
                                widget=forms.TextInput(attrs={
-                                   'placeholder': 'Value',
+                                   'placeholder': 'Wartosc',
                                    'class': 'form-control form-group',
                                    'required': ''}))
+
 
 class MessageForm(forms.Form):
     subject = forms.CharField(label='',
                               widget=forms.TextInput(attrs={
-                                    'placeholder': 'Subject',
+                                    'placeholder': 'Temat',
                                     'class': 'form-control',
                                     'required': ''}))
     content = forms.CharField(label='',
                               widget=forms.TextInput(attrs={
-                                    'placeholder': 'Content',
+                                    'placeholder': 'Wiadomosc',
                                     'class': 'form-control',
                                     'required': ''}))
-
