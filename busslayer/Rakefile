@@ -1,7 +1,7 @@
 ENV['RACK_ENV'] == 'test'
 
 require "sinatra/activerecord/rake"
-require "./app"
+
 
 namespace :db do
   task :load_config do
@@ -12,6 +12,8 @@ end
 require 'rspec/core/rake_task'
  
 RSpec::Core::RakeTask.new :specs do |task|
+  ENV['TESTING'] = true.to_s
+  require "./app"
   task.pattern = Dir['spec/**/*.rb']
 end
  
