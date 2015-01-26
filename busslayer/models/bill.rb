@@ -48,7 +48,7 @@ class Bill < ActiveRecord::Base
     hash
   end
 
-  def all_bills_value
+  def self.all_bills_value
     sum = 0
     Bill.select("sum(value) as bills_value").each do |x|
       sum += x.bills_value

@@ -6,6 +6,10 @@ require 'i18n'
 require 'json'
 require 'drb'
 require 'thread'
+require 'protobuf'
+require 'protobuf/cli'
+require 'protobuf/message'
+require 'protobuf/rpc/service'
 
 # Used for loading models into the application
 Dir['./models/*.rb'].each { |file| require file }
@@ -20,10 +24,6 @@ Dir['./lib/**/*.rb'].each { |file| require file }
 
 # Loading services
 Dir['./services/**/*.rb'].each { |file| require file }
-
-# ENV['RACK_ENV'] ||= 'development'
-# RMI_URL = 'druby://0.0.0.0:9000'
-# $SITE = 1
 
 # Represents sinatra app (which is business layer)
 class SimpleApp < Sinatra::Base
@@ -40,7 +40,10 @@ class SimpleApp < Sinatra::Base
   register Sinatra::Routing::Messages
 
   # TODO: Running RPC Server to handle RPC Protobuf requests
-  %x( rpc_server  )
-
-  run! if app_file == $PROGRAM_NAME
+  services = Dir['./services/**/*.rb']
+  services.unshift('start')
+  
+  thr = Thread.new { run! }
+  ::Protobuf::CLI.start(services)
+  thr.join
 end

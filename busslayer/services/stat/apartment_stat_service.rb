@@ -1,20 +1,23 @@
 module Stat
   class ApartmentStatService
     def fetch
-      respond_with(list)
+      apartments, tenants_count, bills_value = get_data
+      respond_with(apartments: apartments, tenants_count: tenants_count, 
+        bills_value: bills_value)
     end
 
     private
 
     def get_data
-      ApartmentsStatList list = ApartmentsStatList.new
-      list.tenants_count = Apartment.all_tenants_count
-      list.bills_value = Bill.all_bills_value
+      tenants_count = Apartment.all_tenants_count
+      puts tenants_count
+      bills_value = Bill.all_bills_value
+      apartments = []
       Apartment.all.each do |a|
-        list.apartments << ApartmentStat.new(name: a.name, description: a.description,
+        apartments << ApartmentStat.new(name: a.name, description: a.description,
           tenants_count: a.users.count, bills_value: a.bills_value)
       end
-      list
+      return [apartments, tenants_count, bills_value]
     end
   end
 end

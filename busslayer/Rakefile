@@ -1,5 +1,3 @@
-load 'protobuf/tasks/compile.rake'
-
 ENV['RACK_ENV'] == 'test'
 
 require "sinatra/activerecord/rake"

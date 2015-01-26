@@ -51,7 +51,7 @@ class Apartment < ActiveRecord::Base
   def bills_value
     sum = 0
     Apartment.find_by_id(id).bills.select("sum(value) as bills_value").each do |x|
-      sum += x
+      sum += x.bills_value.nil? ? 0 : x.bills_value
     end
     sum
   end
