@@ -1,0 +1,21 @@
+package stat;
+message ApartmentStatRequest {
+	optional string name = 1;
+}
+
+message ApartmentStat {
+	required string name = 1;
+	optional string description = 2;
+	required int32 tenants_count = 3;
+	optional double bills_value = 4;
+}
+
+message ApartmentsStatList {
+	repeated ApartmentStat apartments = 1;
+	required int32 tenants_count = 2;
+	required double bills_value = 3;
+}
+
+service ApartmentStatService {
+	rpc Fetch (ApartmentStatRequest) returns (ApartmentsStatList);
+}
