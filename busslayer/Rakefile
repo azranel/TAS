@@ -4,6 +4,7 @@ require "sinatra/activerecord/rake"
 
 
 namespace :db do
+  ENV['DB'] = true.to_s
   task :load_config do
     require "./app"
   end

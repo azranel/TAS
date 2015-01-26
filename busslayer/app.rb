@@ -42,7 +42,7 @@ class SimpleApp < Sinatra::Base
   # TODO: Running RPC Server to handle RPC Protobuf requests
   services = Dir['./services/**/*.rb']
   services.unshift('start')
-  unless ENV['TESTING'] == true.to_s
+  unless ENV['TESTING'] == true.to_s || ENV['DB'] == true.to_s
     thr = Thread.new { run! }
     ::Protobuf::CLI.start(services)
     thr.join
