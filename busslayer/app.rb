@@ -10,6 +10,9 @@ require 'protobuf'
 require 'protobuf/cli'
 require 'protobuf/message'
 require 'protobuf/rpc/service'
+require 'msgpack'
+require './rpc_server'
+require 'msgpack/rpc'
 
 # Used for loading models into the application
 Dir['./models/*.rb'].each { |file| require file }
@@ -18,12 +21,6 @@ I18n.config.enforce_available_locales = false
 
 # Used for loading routes
 Dir['./routes/*.rb'].each { |file| require file }
-
-# Loading protobufs
-Dir['./lib/**/*.rb'].each { |file| require file }
-
-# Loading services
-Dir['./services/**/*.rb'].each { |file| require file }
 
 # Represents sinatra app (which is business layer)
 class SimpleApp < Sinatra::Base
@@ -39,12 +36,13 @@ class SimpleApp < Sinatra::Base
   register Sinatra::Routing::Misc
   register Sinatra::Routing::Messages
 
-  # TODO: Running RPC Server to handle RPC Protobuf requests
-  services = Dir['./services/**/*.rb']
-  services.unshift('start')
   unless ENV['TESTING'] == true.to_s || ENV['DB'] == true.to_s
-    thr = Thread.new { run! }
-    ::Protobuf::CLI.start(services)
+    Thread.new do 
+      svr = MessagePack::RPC::Server.new 
+      svr.listen('127.0.0.1', 18800, StatisticsHandler.new)
+      svr.run
+    end
+    run!
     thr.join
   end
 end

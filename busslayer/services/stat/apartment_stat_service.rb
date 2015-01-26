@@ -1,3 +1,7 @@
+require "protobuf"
+require 'protobuf/message'
+require 'protobuf/rpc/service'
+
 module Stat
   class ApartmentStatService
     def fetch

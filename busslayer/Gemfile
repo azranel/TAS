@@ -4,19 +4,27 @@ source 'http://rubygems.org/'
 gem 'sinatra'
 
 # database gems
-gem 'activerecord'
+gem 'activerecord', '= 4.1.6'
 gem 'sinatra-activerecord'
 gem 'pg'
 
 # rake for tasks
 gem 'rake'
-
+gem 'rack', '=1.5.2' 
+gem 'json', '=1.8.1'
 # others
 gem 'annotate', '~> 2.6.5'
-gem 'bcrypt'
+gem 'bcrypt', '= 3.1.7'
 gem 'rspec'
 gem 'rack-test'
 gem 'database_cleaner'
 gem 'codeclimate-test-reporter'
 gem 'factory_girl'
 gem 'protobuf'
+
+
+gem 'activesupport', '= 4.1.6'
+gem 'activemodel', '=4.1.6'
+gem 'arel', '=5.0.1.20140414130214'
+gem 'i18n', '= 0.6.11'
+gem 'msgpack'
