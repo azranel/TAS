@@ -3,15 +3,19 @@
         {% if login_data.id %}
             <h2>Szczegóły mieszkania</h2>
             {% if apartment %}
+                <br /><br />
                 <div class="col-md-3 col-details">
-                    {% if apartment.owner.id == login_data.id %}
-                        <a href="/apartments/edit/{{ apartment.id }}">Edytuj</a>
-                        <a href="/apartments/{{ apartment.id }}/delete">Usuń</a>
-                    {% endif %}
+                    <p> <b>Szczegóły:</b> </p>
                     <table class="table apartment-table">
                         <tr>
                             <td>ID:</td>
-                            <td>{{ apartment.id }}</td>
+                            <td>
+                                {{ apartment.id }}
+                                {% if apartment.owner.id == login_data.id %}
+                                    <a href="/apartments/edit/{{ apartment.id }}">Edytuj</a>
+                                    <a href="/apartments/{{ apartment.id }}/delete">Usuń</a>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td>Nazwa:</td>
@@ -51,7 +55,7 @@
                     {% endif %}
                 </div>
                 <div class="col-md-6 col-bills">
-                <p>Rachunki: </p>
+                    <p> <b>Rachunki:</b> </p>
                     <table class="table table-hover">
                         <tr>
                             <td>Dodał</td>
@@ -115,13 +119,14 @@
                     </div>
                 </div>
                 <div class="col-md-3 col-msg">
-                    <p> Wiadomości: </p>
+                    <p> <b>Wiadomości:</b> </p>
+                    <hr>
                     {% for message in apartment.messages %}
-                        Temat: {{ message.subject }}
+                        <b>Temat:</b><br/> {{ message.subject }}<br/>
+                        <b>Treść:</b><br/> {{ message.content }}<br/>
                         <a data-method="delete" href="/message/{{ message.id }}/delete" rel="nofollow">Usuń</a>
                         <a data-method="update" href="/message/{{ message.id }}/edit" rel="nofollow">Edytuj</a><br/>
-                        Treść: {{ message.content }}<br/>
-                        ---<br/><br>
+                        <hr>
                     {% endfor %}
 
                     <h4>Dodaj wiadomość:</h4>
