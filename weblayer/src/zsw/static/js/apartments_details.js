@@ -4,6 +4,11 @@ function set_btn_width(element) {
 }
 
 $(document).ready(function(){
+    $( window ).resize(function() {
+        set_btn_width('col-details');
+        set_btn_width('col-bills');
+        set_btn_width('col-msg');
+    });
     set_btn_width('col-details');
     set_btn_width('col-bills');
     set_btn_width('col-msg');
