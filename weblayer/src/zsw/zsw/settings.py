@@ -18,6 +18,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 SERVER = "http://0.0.0.0:4567/"
 
+RPC_SERVER = '127.0.0.1'
+RPC_PORT = 18800
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'x0b386(w5ej73vdy#i0wu-#xy(l92@y=+)e)-89c^qev1-b+6b'
 

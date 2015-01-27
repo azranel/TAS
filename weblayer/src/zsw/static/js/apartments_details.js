@@ -1,4 +1,13 @@
+function set_btn_width(element) {
+    var width = $('.' + element + ' .form-horizontal').width();
+    $('.' + element + ' .form-horizontal .form-group .btn')[0].style.width = width + "px";
+}
+
 $(document).ready(function(){
+    set_btn_width('col-details');
+    set_btn_width('col-bills');
+    set_btn_width('col-msg');
+
     $('.add_debtor').click(function() {
         var $form = $(this).parent().find(".residents_list");
         if ($form.hasClass("hidden")) {

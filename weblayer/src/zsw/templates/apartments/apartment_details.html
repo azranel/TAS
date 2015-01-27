@@ -2,48 +2,120 @@
 {% block content %}
         {% if login_data.id %}
             <h2>Szczegóły mieszkania</h2>
-            {% if apartment.owner.id == login_data.id %}
-                <a href="/apartments/edit/{{ apartment.id }}">Edytuj</a>
-                <a href="/apartments/{{ apartment.id }}/delete">Usuń</a>
-            {% endif %}
-
             {% if apartment %}
-                <table border="1px">
-                    <tr>
-                        <td>ID:</td>
-                        <td>{{ apartment.id }}</td>
-                    </tr>
-                    <tr>
-                        <td>Nazwa:</td>
-                        <td>{{ apartment.name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Lokalizacja:</td>
-                        <td>{{ apartment.address }}, {{ apartment.city }}</td>
-                    </tr>
-                    <tr>
-                        <td>Właściciel:</td>
-                        <td>{{ apartment.owner.firstname }}</td>
-                    </tr>
-                    <tr>
-                        <td>Mieszkańcy ({{ apartment.residents_count }}):</td>
-                        <td>
-                            {% for resident in apartment.residents %}
-                                <a href="/user/{{ resident.id }}">{{ resident.firstname }}</a>,
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Opis:</td>
-                        <td>{{ apartment.description }}</td>
-                    </tr>
-                </table>
-                <br/>
-
-                <p> Wiadomości: </p>
-                    <!--{{apartment.messages}}-->
-                    <!--Temat: {{apartment.messages.subject}} <br>-->
-                    <!--Treśćt: {{apartment.messages.content}}<br>-->
+                <div class="col-md-3 col-details">
+                    {% if apartment.owner.id == login_data.id %}
+                        <a href="/apartments/edit/{{ apartment.id }}">Edytuj</a>
+                        <a href="/apartments/{{ apartment.id }}/delete">Usuń</a>
+                    {% endif %}
+                    <table class="table apartment-table">
+                        <tr>
+                            <td>ID:</td>
+                            <td>{{ apartment.id }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nazwa:</td>
+                            <td>{{ apartment.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Lokalizacja:</td>
+                            <td>{{ apartment.address }}, {{ apartment.city }}</td>
+                        </tr>
+                        <tr>
+                            <td>Właściciel:</td>
+                            <td>{{ apartment.owner.firstname }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mieszkańcy ({{ apartment.residents_count }}):</td>
+                            <td>
+                                {% for resident in apartment.residents %}
+                                    <a href="/user/{{ resident.id }}">{{ resident.firstname }}</a>,
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Opis:</td>
+                            <td>{{ apartment.description }}</td>
+                        </tr>
+                    </table>
+                    {% if apartment.owner.id == login_data.id %}
+                        <br />
+                        <h4>Dodaj użytkownika:</h4>
+                        <form method="post" class="form-horizontal">
+                            {% csrf_token %}
+                            {{ form_resident }}
+                            <div class="form-group">
+                                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 col-bills">
+                <p>Rachunki: </p>
+                    <table class="table table-hover">
+                        <tr>
+                            <td>Dodał</td>
+                            <td>Nazwa</td>
+                            <td>Opis</td>
+                            <td>Cena</td>
+                            <td>Cena/os.</td>
+                            <td>Przypisani lokatorzy</td>
+                            <td>Modyfikacje</td>
+                        </tr>
+                        {% for bill in apartment.bills %}
+                            <tr>
+                                <td><a href="/user/{{ bill.user_id }}">{{ bill.user_id }}</a></td>
+                                <td>{{ bill.name }}</td>
+                                <td>{{ bill.description }}</td>
+                                <td>{{ bill.value }}</td>
+                                <td>{{ bill.divide }}</td>
+                                <td>
+                                    {% for debtor in apartment.user_bills_list %}
+                                        {% if debtor.bill_id == bill.id  %}
+                                            {% if debtor.users %}
+                                                {% for user in debtor.users %}
+                                                    <a href="/user/{{ user.id }}">{{ user.firstname }}</a> <a data-method="POST" href="/bills/{{ bill.id }}/deletedebtor/{{ user.id }}" rel="nofollow">X</a>,
+                                                {% endfor %}
+                                            {% else %}
+                                                Nikt
+                                            {% endif %}
+                                            <a class="add_debtor">+</a>
+                                            <div class="residents_list hidden">
+                                                {% for resident in apartment.residents %}
+                                                    {% if resident.id not in debtor.users_ids %}
+                                                        <label><input type="checkbox" name="{{ resident.id }}"> {{ resident.firstname }} {{ resident.lastname }}</label><br />
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <input class="btn btn-lg btn-primary btn-block btn-adddebtor" type="submit" value="dodaj">
+                                                <a data-method="POST" class="add_debtor hidden" href="/bills/{{ bill.id }}/adddebtors/" rel="nofollow">dodaj</a>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                {% if bill.user_id == login_data.id %}
+                                    <a href="/bills/edit/{{ bill.id }}">Edytuj</a>,
+                                    <a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Usuń</a>
+                                {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-8">
+                            <h4>Dodaj rachunek:</h4>
+                            <form method="post" class="form-horizontal">
+                                {% csrf_token %}
+                                {{ form_bill }}
+                                <div class="form-group">
+                                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-msg">
+                    <p> Wiadomości: </p>
                     {% for message in apartment.messages %}
                         Temat: {{ message.subject }}
                         <a data-method="delete" href="/message/{{ message.id }}/delete" rel="nofollow">Usuń</a>
@@ -52,96 +124,14 @@
                         ---<br/><br>
                     {% endfor %}
 
-                <br><br>
-                <p>Rachunki: </p>
-                <table class="table table-hover">
-                    <tr>
-                        <td>Dodał</td>
-                        <td>Nazwa</td>
-                        <td>Opis</td>
-                        <td>Cena</td>
-                        <td>Cena/os.</td>
-                        <td>Przypisani lokatorzy</td>
-                        <td>Modyfikacje</td>
-                    </tr>
-                    {% for bill in apartment.bills %}
-                        <tr>
-                            <td><a href="/user/{{ bill.user_id }}">{{ bill.user_id }}</a></td>
-                            <td>{{ bill.name }}</td>
-                            <td>{{ bill.description }}</td>
-                            <td>{{ bill.value }}</td>
-                            <td>{{ bill.divide }}</td>
-                            <td>
-                                {% for debtor in apartment.user_bills_list %}
-                                    {% if debtor.bill_id == bill.id  %}
-                                        {% if debtor.users %}
-                                            {% for user in debtor.users %}
-                                                <a href="/user/{{ user.id }}">{{ user.firstname }}</a> <a data-method="POST" href="/bills/{{ bill.id }}/deletedebtor/{{ user.id }}" rel="nofollow">X</a>,
-                                            {% endfor %}
-                                        {% else %}
-                                            Nikt
-                                        {% endif %}
-                                        <a class="add_debtor">+</a>
-                                        <div class="residents_list hidden">
-                                            {% for resident in apartment.residents %}
-                                                {% if resident.id not in debtor.users_ids %}
-                                                    <label><input type="checkbox" name="{{ resident.id }}"> {{ resident.firstname }} {{ resident.lastname }}</label><br />
-                                                {% endif %}
-                                            {% endfor %}
-                                            <input class="btn btn-lg btn-primary btn-block btn-adddebtor" type="submit" value="dodaj">
-                                            <a data-method="POST" class="add_debtor hidden" href="/bills/{{ bill.id }}/adddebtors/" rel="nofollow">dodaj</a>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                            {% if bill.user_id == login_data.id %}
-                                <a href="/bills/edit/{{ bill.id }}">Edytuj</a>,
-                                <a data-method="delete" href="/bills/{{ bill.id }}/delete" rel="nofollow">Usuń</a>
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                <br/>
-                <div class="row">
-                    <div class="col-md-5">
-                        {% if apartment.owner.id == login_data.id %}
-                            <br />
-                            <h4>Dodaj użytkownika:</h4>
-                            <form method="post" class="form-horizontal">
-                                {% csrf_token %}
-                                {{ form_resident }}
-                                <div class="form-group">
-                                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
-                                </div>
-                            </form>
-                            <br />
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-offset-2 col-md-5">
-                        <h4>Dodaj rachunek:</h4>
-                        <form method="post" class="form-horizontal">
-                            {% csrf_token %}
-                            {{ form_bill }}
-                            <div class="form-group">
+                    <h4>Dodaj wiadomość:</h4>
+                    <form method="post" class="form-horizontal">
+                        {% csrf_token %}
+                        {{ form_message }}
+                        <div class="form-group">
                             <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-md-offset-3 col-md-5">
-                        <h4>Dodaj wiadomość:</h4>
-                        <form method="post" class="form-horizontal">
-                            {% csrf_token %}
-                            {{ form_message }}
-                            <div class="form-group">
-                            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj" />
-                            </div>
-                        </form>
-                    </div>
-
+                        </div>
+                    </form>
                 </div>
             {% endif %}
         {% else %}

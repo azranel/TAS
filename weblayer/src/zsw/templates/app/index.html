@@ -2,17 +2,27 @@
 {% block content %}
     {% if login_data.id %}
         <br /><br /><br />
-        <center><div>Witaj! Udało Ci się poprawnie zalogować.</div></center>
+        <div>Witaj! Udało Ci się poprawnie zalogować.</div>
     {% elif login_data.signout %}
-        <center><div>Poprawnie wylogowano!</div></center>
+        <div>Poprawnie wylogowano!</div>
     {% else %}
-        <center>
-           <h1> Aplikacja do zarządzania sprawami współlokatorskimi </h1>
-           Jeżeli szukasz rozwiązania na wiele współlokatorskich problemów to dobrze trafiłeś!<br/>
-           Jest to w pełni darmowa aplikacja, a sama rejestracja trwa zaledwie kilka sekund!<br/>
-           Jeżeli wynajmujesz od kogoś lub komuś mieszkanie to poświęć kilka sekund na zapoznanie z naszą aplikacją.<br/>
-           Gwarantujemy, że nie będzie to zmarnowany czas!<br/>
-           <a href="signin">Aby zacząć kliknij tutaj!</a>
-       </center>
+            <h1> Aplikacja do zarządzania sprawami współlokatorskimi </h1>
+            Jeżeli szukasz rozwiązania na wiele współlokatorskich problemów to dobrze trafiłeś!<br/>
+            Jest to w pełni darmowa aplikacja, a sama rejestracja trwa zaledwie kilka sekund!<br/>
+            Jeżeli wynajmujesz od kogoś lub komuś mieszkanie to poświęć kilka sekund na zapoznanie z naszą aplikacją.<br/>
+            Gwarantujemy, że nie będzie to zmarnowany czas!<br/>
+            <a href="signin">Aby zacząć kliknij tutaj!</a><br />
+            <br />
+            <div style="clear:both;"></div>
+            {% if statistics %}
+            <table class="table table-bordered">
+                <tr>
+                    <td>{{statistics.tenants_count}} użytkowników już korzysta!</td>
+                </tr>
+                <tr>
+                    <td>{{statistics.bills_value}} zł łącznych rachunków!</td>
+                </tr>
+            </table>
+            {% endif %}
     {% endif %}
 {% endblock %}

@@ -4,8 +4,10 @@ from django.shortcuts import render, render_to_response, HttpResponseRedirect
 from django.contrib.sessions.backends.db import SessionStore
 from zsw.zsw import settings
 import zsw.app.forms as forms
+
 import httplib2
 import json
+import msgpackrpc
 
 
 def check_session():
@@ -48,7 +50,13 @@ def request_server(path, method, body):
     return content
 
 
-### USER
+def rpc_connection():
+    return msgpackrpc.Client(msgpackrpc.Address(
+        settings.RPC_SERVER,
+        settings.RPC_PORT))
+
+
+# USER
 @check_session()
 def login(request, status):
     """ Sign in form """
@@ -200,7 +208,7 @@ def signout(request):
     return response
 
 
-### BILLS
+# BILLS
 def fetch_bill(bill_id):
     """
     Fetch bill data by id from server.
@@ -270,7 +278,6 @@ def add_bill(request, status, form_bill, apartment_id):
     )
 
 
-
 def delete_bill(request, bill_id):
     """ Delete bill by id from the server database. """
     content = request_server("bills/" + str(bill_id), "DELETE", "")
@@ -319,7 +326,7 @@ def edit_bill(request, status, bill_id):
     return response
 
 
-### APARTMENTS
+# APARTMENTS
 def fetch_apartment(apartment_id):
     """
     Fetch apartment data by id from server.
@@ -365,6 +372,7 @@ def apartments(request, status):
                   'list_of_owned_apartments': owned_apartments,
                   'list_of_resident_apartments': resident_apartments,
                   })
+
 
 def add_resident(request, form_resident, status, apartment_id):
     """ Send request to add resident. """
@@ -524,14 +532,14 @@ def create_apartment(request, status):
                           })
     return response
 
-### Message
+
+# Message
 def fetch_message(message_id):
     """
     Fetch message data by id from server.
     Return dict.
     """
     return request_server("message/" + str(message_id), "GET", "")
-
 
 
 def add_message(request, status, form_message, apartment_id):
@@ -546,17 +554,13 @@ def add_message(request, status, form_message, apartment_id):
                 "&message[content]=" + form_dict['content'] + \
                 "&message[apartment_id]=" + str(apartment_id)
 
-
-            content = request_server("message/create", "POST", body)
-
-            apartment = fetch_apartment(apartment_id)
+            request_server("message/create", "POST", body)
 
             response = HttpResponseRedirect(
-                 '/apartments/' + str(apartment_id)
-                )
+                '/apartments/' + str(apartment_id)
+            )
 
             return response
-
 
 
 @check_session()
@@ -586,7 +590,7 @@ def edit_message(request, status, message_id):
         form = forms.MessageForm({
             'subject': message_info['subject'],
             'content': message_info['content'],
-            })
+        })
         response = render(request, 'message/edit_message.html', {
                           'form': form,
                           'login_data': status,
@@ -594,20 +598,29 @@ def edit_message(request, status, message_id):
 
     return response
 
+
 def delete_message(request, message_id):
-    content = request_server("message/" + str(message_id) + "/delete", "DELETE", "")
+    content = request_server("message/" + str(message_id) + "/delete",
+                             "DELETE", "")
     response = HttpResponseRedirect(
         '/apartments/' + str(content['apartment_id'])
     )
     return response
 
 
-### APP
+# APP
 @check_session()
 def index(request, status):
     """ View of main side. """
+
+    try:
+        fetch_statistics = rpc_connection().call('fetch')
+    except msgpackrpc.TransportError:
+        fetch_statistics = None
+
     return render(request, 'app/index.html', {
                   'login_data': status,
+                  'statistics': fetch_statistics,
                   })
 
 

@@ -100,10 +100,10 @@ class MessageForm(forms.Form):
     subject = forms.CharField(label='',
                               widget=forms.TextInput(attrs={
                                     'placeholder': 'Temat',
-                                    'class': 'form-control',
+                                    'class': 'form-control form-group',
                                     'required': ''}))
     content = forms.CharField(label='',
-                              widget=forms.TextInput(attrs={
+                              widget=forms.Textarea(attrs={
                                     'placeholder': 'Wiadomosc',
-                                    'class': 'form-control',
+                                    'class': 'form-control form-group',
                                     'required': ''}))
