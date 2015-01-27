@@ -30,7 +30,6 @@ GEM
       activesupport (>= 3.0.0)
     i18n (0.6.11)
     json (1.8.1)
-    middleware (0.1.0)
     minitest (5.5.1)
     msgpack (0.5.10)
     msgpack-rpc (0.5.3)
@@ -38,11 +37,6 @@ GEM
       msgpack (~> 0.5.10)
     multi_json (1.10.1)
     pg (0.18.1)
-    protobuf (3.4.3)
-      activesupport (>= 3.2)
-      middleware
-      thor
-      thread_safe
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
@@ -73,7 +67,6 @@ GEM
     sinatra-activerecord (2.0.4)
       activerecord (>= 3.2)
       sinatra (~> 1.0)
-    thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
     tzinfo (1.2.2)
@@ -97,7 +90,6 @@ DEPENDENCIES
   msgpack
   msgpack-rpc
   pg
-  protobuf
   rack (= 1.5.2)
   rack-test
   rake
