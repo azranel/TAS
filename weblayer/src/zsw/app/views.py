@@ -2,6 +2,7 @@
 
 from django.shortcuts import render, render_to_response, HttpResponseRedirect
 from django.contrib.sessions.backends.db import SessionStore
+
 from zsw.zsw import settings
 import zsw.app.forms as forms
 
@@ -43,8 +44,9 @@ def request_server(path, method, body):
     _, content = h.request(
         settings.SERVER + path,
         method=method,
-        body=body
+        body=body.encode('utf-8'),
     )
+
     content = json.loads(content)
 
     return content
