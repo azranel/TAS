@@ -12,7 +12,7 @@ apartments = [
 ]
 
 bills = [
-  { name: 'Papier', description: 'szary', value: '4.99', apartment_id: 0, user_id: 1 },
+  { name: 'Papier', description: 'szary', value: '4.99', apartment_id: 1, user_id: 1 },
   { name: 'Garnki', description: 'czerwony', value: '44.99', apartment_id: 1, user_id: 2 },
 ]
 
