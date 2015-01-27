@@ -17,6 +17,7 @@ manage = zsw.manage:main
     install_requires=[
         'Django',
     	'httplib2',
-        'protobuf',
+        'msgpack-python',
+        'msgpack-rpc-python',
     ]
 )
