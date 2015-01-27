@@ -40,7 +40,7 @@ module Sinatra
 			def self.update(app)
 				app.post "/message/:id/edit" do 
 					content_type :json
-					message = Message.find_by_id(parms[:id])
+					message = Message.find_by_id(params[:id])
 					if message
 						if message.update(params[:message])
 							{ status: 200, apartment_id: message.apartment_id, updated_at: message.updated_at }.to_json
