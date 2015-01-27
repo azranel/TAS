@@ -4,8 +4,10 @@ from django.shortcuts import render, render_to_response, HttpResponseRedirect
 from django.contrib.sessions.backends.db import SessionStore
 from zsw.zsw import settings
 import zsw.app.forms as forms
+
 import httplib2
 import json
+import msgpackrpc
 
 
 def check_session():
@@ -46,6 +48,12 @@ def request_server(path, method, body):
     content = json.loads(content)
 
     return content
+
+
+def rpc_connection():
+    return msgpackrpc.Client(msgpackrpc.Address(
+        settings.RPC_SERVER,
+        settings.RPC_PORT))
 
 
 # USER
@@ -605,16 +613,14 @@ def delete_message(request, message_id):
 def index(request, status):
     """ View of main side. """
 
-    import msgpackrpc
     try:
-        client = msgpackrpc.Client(msgpackrpc.Address("127.0.0.1", 18800))
-        result = client.call('fetch')
+        fetch_statistics = rpc_connection().call('fetch')
     except msgpackrpc.TransportError:
-        result = "Connection problem"
+        fetch_statistics = None
 
     return render(request, 'app/index.html', {
                   'login_data': status,
-                  'statistics': result,
+                  'statistics': fetch_statistics,
                   })
 
 

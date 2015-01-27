@@ -14,6 +14,7 @@
             <a href="signin">Aby zacząć kliknij tutaj!</a><br />
             <br />
             <div style="clear:both;"></div>
+            {% if statistics %}
             <table class="table table-bordered">
                 <tr>
                     <td>{{statistics.tenants_count}} użytkowników już korzysta!</td>
@@ -22,5 +23,6 @@
                     <td>{{statistics.bills_value}} zł łącznych rachunków!</td>
                 </tr>
             </table>
+            {% endif %}
     {% endif %}
 {% endblock %}
