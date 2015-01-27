@@ -108,4 +108,32 @@ body {
 }
 .apartment-table {
     float: left;
+    width: 100% !important;
+}
+.col-details {
+     border-right: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.col-details .table {
+    border-bottom-color: rgb(221, 221, 221);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+.col-msg {
+    border-left: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.col-msg .table {
+    border-bottom-color: rgb(221, 221, 221);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+.col-bills .table {
+    border-bottom-color: rgb(221, 221, 221);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
 }
