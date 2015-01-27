@@ -5,21 +5,29 @@
             <a href="create">Dodaj mieszkanie</a><br />
 
             {% if list_of_owned_apartments %}
-                Lista własnych mieszkań:
-                <ul>
+                <table class="table table-responsive">
+                    <tr>
+                        <th>Lista własnych mieszkań:</th>
+                    </tr>
                     {% for apartment in list_of_owned_apartments %}
-                    <li><a href="{{ apartment.id }}">{{apartment.name}}</a></li>
+                        <tr>
+                            <td>&rArr; <a href="{{ apartment.id }}">{{apartment.name}}</a></td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                </table>
             {% endif %}
 
             {% if list_of_resident_apartments %}
-                Lista zamieszkałych mieszkań:
-                <ul>
-                    {% for apartment in list_of_resident_apartments %}
-                    <li><a href="{{ apartment.id }}">{{apartment.name}}</a></li>
-                    {% endfor %}
-                </ul>
+                <table class="table table-responsive">
+                    <tr>
+                        <th>Lista zamieszkałych mieszkań:</th>
+                    </tr>
+                        {% for apartment in list_of_resident_apartments %}
+                            <tr>
+                                <td>&rArr; <a href="{{ apartment.id }}">{{apartment.name}}</a></td>
+                            </tr>
+                        {% endfor %}
+                </table>
             {% endif %}
 
         {% else %}
