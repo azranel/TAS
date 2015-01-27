@@ -43,13 +43,17 @@ def request_server(path, method, body):
     Send request to the server.
     Return dict.
     """
+    if type(body) == str:
+        body = body.decode(encoding='UTF-8')
+    else:
+        body = body.encode('utf-8')
+
     h = httplib2.Http()
     _, content = h.request(
         settings.SERVER + path,
         method=method,
-        body=body.encode('utf-8'),
+        body=body,
     )
-
     content = json.loads(content)
 
     return content
