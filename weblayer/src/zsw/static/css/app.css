@@ -137,3 +137,9 @@ body {
     border-bottom-style: solid;
     border-bottom-width: 1px;
 }
+hr {
+    margin-top: 11px !important;
+    border-top-color: rgb(221, 221, 221) !important;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
