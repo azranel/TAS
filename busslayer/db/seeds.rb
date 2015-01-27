@@ -29,9 +29,11 @@ apartments.each do |apartment|
   Apartment.create(apartment)
 end
 
+a = Apartment.first
 User.all.each do |user|
-  Apartment.first.users << user
+  a.users << user
 end
+a.save
 
 bills.each do |bill|
   Bill.create(bill)

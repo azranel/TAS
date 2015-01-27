@@ -17,6 +17,9 @@ I18n.config.enforce_available_locales = false
 # Used for loading routes
 Dir['./routes/*.rb'].each { |file| require file }
 
+RPCIP = '127.0.0.1'
+RPCPORT = 18800
+
 # Represents sinatra app (which is business layer)
 class SimpleApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
@@ -33,8 +36,9 @@ class SimpleApp < Sinatra::Base
 
   unless ENV['TESTING'] == true.to_s || ENV['DB'] == true.to_s
     Thread.new do 
+      puts "[RPC] Running MessagePack RPC Server on #{ RPCIP } : #{ RPCPORT }"
       svr = MessagePack::RPC::Server.new 
-      svr.listen('127.0.0.1', 18800, StatisticsHandler.new)
+      svr.listen(RPCIP, RPCPORT, StatisticsHandler.new)
       svr.run
     end
     run!
