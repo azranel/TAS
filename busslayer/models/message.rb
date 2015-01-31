@@ -12,6 +12,7 @@
 #
 
 class Message < ActiveRecord::Base
+  include Fetchable
 
   belongs_to :user
   belongs_to :apartment
@@ -27,15 +28,4 @@ class Message < ActiveRecord::Base
   def user_belong_to_apartment
     errors.add(:wrong_user, 'User must belong to apartment') unless apartment.users.include?(user) || apartment.user==user
   end
-
-
-  def fetch_hash(status_value = 200, values = [])
-    hash = {}
-    hash[:status] = status_value
-    values.each do |value|
-      hash[value] = self[value]
-    end
-    hash
-  end
-
 end

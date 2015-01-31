@@ -13,6 +13,7 @@
 #
 
 class Bill < ActiveRecord::Base
+  include Fetchable
   has_many :users_bills
   has_many :users, through: :users_bills
 
@@ -37,15 +38,6 @@ class Bill < ActiveRecord::Base
 
   def to_json
     super(methods: :divide)
-  end
-
-  def fetch_hash(status_value = 200, values = [])
-    hash = {}
-    hash[:status] = status_value
-    values.each do |value|
-      hash[value] = self[value]
-    end
-    hash
   end
 
   def self.all_bills_value
